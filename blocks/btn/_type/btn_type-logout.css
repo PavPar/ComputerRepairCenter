@@ -1,8 +1,8 @@
-.acc-info__btn_type-logout{
+.btn_type-logout{
     background-color: red;
     transition: box-shadow ease-out .5s;
 }
 
-.acc-info__btn_type-logout:hover{
+.btn_type-logout:hover{
     box-shadow: darkred 5px 5px;
 }

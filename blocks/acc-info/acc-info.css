@@ -1,6 +1,3 @@
-@import url(./__btn/acc-info__btn.css);
-@import url(./__btn/_type/acc-info__btn_type-logout.css);
-@import url(./__btn/_type/acc-info__btn_type-user.css);
 @import url(./__logo/acc-info__logo.css);
 @import url(./__name/acc-info__name.css);
 .acc-info{

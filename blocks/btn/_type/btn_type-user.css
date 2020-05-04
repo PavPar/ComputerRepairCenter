@@ -1,8 +1,8 @@
-.acc-info__btn_type-user{
+.btn_type-user{
     background-color: #A251FF;
     transition: box-shadow ease-out .5s;
 }
 
-.acc-info__btn_type-user:hover{
+.btn_type-user:hover{
     box-shadow: #6435A5 5px 5px;
 }

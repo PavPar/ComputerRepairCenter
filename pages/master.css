@@ -8,6 +8,7 @@
 @import url(../blocks/cards/cards.css);
 @import url(../blocks/card/card.css);
 @import url(../blocks/nav-block/nav-block.css);
+@import url(../blocks/btn/btn.css);
 
 body,header,content,footer{
     border: 1px red solid;
