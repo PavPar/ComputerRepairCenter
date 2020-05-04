@@ -1,0 +1,16 @@
+.btn_type-add{
+    background-color: mediumseagreen;
+    transition: box-shadow ease-out .5s;
+    background-image:url(../../../images/plus.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25px 25px; 
+    width: 200px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.btn_type-add:hover{
+    box-shadow: green 5px 5px;
+}
