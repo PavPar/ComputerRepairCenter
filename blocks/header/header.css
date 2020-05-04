@@ -1,0 +1,8 @@
+@import url(./__title/header__title.css);
+.header{
+    display: flex;
+    flex-direction: column;
+    background-color: #547EFF;
+    color: #ffffff;
+    align-items: center;
+}
