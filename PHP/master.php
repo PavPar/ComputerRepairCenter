@@ -18,10 +18,10 @@
         </div>
     </header>
     <main class="content">
-        <nav class="nav-block"><input type="button" class="btn btn_type-add"></nav>
-        <section class="cards">
+        <nav class="nav-block"><a href="ticket__create.php" class="btn btn_type-add"></a></nav>
+        <form class="cards">
            <?php GetCards();?>
-        </section>
+        </form>
     </main>
     <footer class="footer"></footer>
 </body>
