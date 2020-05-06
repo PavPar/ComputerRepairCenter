@@ -1,15 +1,18 @@
-@import url(./_type/btn_type-logout.css);
-@import url(./_type/btn_type-user.css);
-@import url(./_type/btn_type-add.css);
 .btn {
     border: 0;
     box-sizing: border-box;
-  
     font-size: 25px;
     margin-bottom: 10px;
     color: white;
+    width: 350px;
+    height: 50px;
+    text-align:center;
 }
 
 .btn:last-of-type {
     margin-bottom: 0;
+}
+
+.btn:hover{
+    opacity: .8;
 }

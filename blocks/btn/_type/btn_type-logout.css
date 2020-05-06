@@ -1,8 +1,6 @@
 .btn_type-logout{
     background-color: red;
     transition: box-shadow ease-out .5s;
-    width: 350px;
-    height: 50px;
 }
 
 .btn_type-logout:hover{
