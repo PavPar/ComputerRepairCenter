@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
-
+<?php include("master-data.php")?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,14 +20,7 @@
     <main class="content">
         <nav class="nav-block"><input type="button" class="btn btn_type-add"></nav>
         <section class="cards">
-            <div class="card">
-                <h2 class="card__title">ticket_14214214124124124211</h2>
-                <h3 class="card__date">06.05.2020</h3>
-                <h3 class="card__dept">1</h3>
-                <h3 class="card__name">Ivan</h3>
-                <input type="button" class="btn btn_type-card-info" value="Подробнее">
-                <input type="button" class="btn btn_type-card-close" value="Закрыть">
-            </div>
+           <?php GetCards();?>
         </section>
     </main>
     <footer class="footer"></footer>
