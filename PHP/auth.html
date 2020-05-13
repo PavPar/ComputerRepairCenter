@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<?php include("master-data.php")?>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASTER PAGE</title>
+    <link href="../pages/auth.css" rel="stylesheet">
+</head>
+
+<body class="page">
+    <header class="header">
+       
+    </header>
+    <main class="content">
+        <form class="form-login" method="POST" action="auth-check.php">
+            <input type="text" name="user_login">
+            <input type="password" name="user_password">
+            <input type="submit" value="Войти">
+        </form>
+    </main>
+    <footer class="footer"></footer>
+</body>
+
+</html>

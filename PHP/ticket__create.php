@@ -12,7 +12,7 @@
     <header class="header">
         <div class="acc-info">
             <img class="acc-info__logo" src="../images/inqusition-01.svg">
-            <h2 class="acc-info__name">Inquisitor</h2>
+            <h2 class="acc-info__name">Master_1</h2>
             <input type="button" class="btn btn_type-user" value="Страница Пользователя">
             <input type="button" class="btn btn_type-logout" value="Выйти из системы">
         </div>
