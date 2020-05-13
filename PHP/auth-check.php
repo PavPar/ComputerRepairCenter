@@ -18,4 +18,6 @@ if(userValidation(retriveUserData())){
     }else{
         header('Location: master.php');
     }
+}else{
+    header('Location: auth.html');
 }

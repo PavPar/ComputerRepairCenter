@@ -13,8 +13,12 @@
         <div class="acc-info">
             <img class="acc-info__logo" src="../images/inqusition-01.svg">
             <h2 class="acc-info__name">Master_1</h2>
+            
             <input type="button" class="btn btn_type-user" value="Страница Пользователя">
-            <input type="button" class="btn btn_type-logout" value="Выйти из системы">
+            
+            <form action=<?php userLogOut();?>>
+                <input type="submit" class="btn btn_type-logout" value="Выйти из системы">
+            <form>
         </div>
     </header>
     <main class="content">

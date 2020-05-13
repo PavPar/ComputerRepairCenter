@@ -11,7 +11,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-//Получение данных с проверкой
+//Получение данных с проверкой на их существовние
 function getData($key, $mandatory)
 {
     if ($mandatory) {
@@ -31,6 +31,19 @@ function getData($key, $mandatory)
 
 };
 
+function userAuthCheck()
+{
+    if (!array_key_exists('user_id', $_SESSION)) {
+        die("Session is missing user id");
+    }
+}
+
+//Процедура выхода пользователя из системы
+function userLogOut(){
+    session_abort();
+    header('Location: index.php');
+}
+
 //Проверка логина и пароля пользователя
 function userValidation($user)
 {
@@ -40,10 +53,10 @@ function userValidation($user)
     if ($result) {
         if ($result->num_rows == 1) {
             $data = $result->fetch_assoc();
-            $_SESSION['user_id'] = "".$data['master_id']; 
+            $_SESSION['user_id'] = "" . $data['master_id'];
             return true;
         } else {
-           return false; 
+            return false;
         }
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
@@ -53,16 +66,17 @@ function userValidation($user)
 
 //Проверка привелегий пользователя
 
-function checkPrivalge(){
+function checkPrivalge()
+{
     global $conn;
-    if(array_key_exists('user_id',$_SESSION)){
+    if (array_key_exists('user_id', $_SESSION)) {
         $sql = 'SELECT role_id FROM db.master WHERE master_id = ' . $_SESSION['user_id'] . '';
         $result = $conn->query($sql);
         if ($result) {
             $data = $result->fetch_assoc();
-            if($data['role_id'] == 0){
+            if ($data['role_id'] == 0) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } else {
@@ -73,12 +87,13 @@ function checkPrivalge(){
     die('Session is empty!');
 }
 //Сохранение данных тикета
-function saveTicketData($owner_name, $owner_phone, $device_name, $comment)
+function saveTicketData($owner_name, $owner_phone,$device_name, $comment)
 {
     global $conn;
     global $tickets_table;
-    $sql = 'INSERT INTO ' . $tickets_table . " VALUES (ticket_id,sysdate(),'" . $owner_name . "','" . $owner_phone . "',1,1,'" . $device_name . "','1','1','" . $comment . "')";
-    // $sql = 'INSERT INTO ' .$tickets_table." VALUES (ticket_id,sysdate(),'".$owner_name."','".$owner_phone."','test_master',1,'".$device_name."','1','1','".$comment."')";
+    userAuthCheck();
+    $sql = 'INSERT INTO ' . $tickets_table . " VALUES (ticket_id,sysdate(),'" . $owner_name . "','" . $owner_phone . "',".$_SESSION["user_id"].",1,'" . $device_name . "','1','1','" . $comment . "')";
+    $sql = 'INSERT INTO ' . $tickets_table . " VALUES (ticket_id,sysdate(),'" . $owner_name . "','" . $owner_phone . "',".$_SESSION["user_id"].",1,'" . $device_name . "','1','1','" . $comment . "')";
     $result = $conn->query($sql);
     if ($result) {
         echo "OK";
@@ -92,7 +107,8 @@ function getCards()
 {
     global $conn;
     global $tickets_table;
-    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM ' . $tickets_table. ' WHERE master_id = ' . $_SESSION['user_id'] . '';
+    userAuthCheck();
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM ' . $tickets_table . ' WHERE master_id = ' . $_SESSION['user_id'] . '';
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows > 0) {
