@@ -8,4 +8,10 @@ $fields = array(
     "comment",
 );
 
-saveTicketData(getData($fields[0], true), getData($fields[1], true), getData($fields[2], false), getData($fields[3], false));
+if (getData("btn_self", false) != null) {
+    saveTicketData(getData($fields[0], true), getData($fields[1], true), getData($fields[2], false), getData($fields[3], false),true);
+} else {
+    if (getData("btn_pool", false) != null) {
+        saveTicketData(getData($fields[0], true), getData($fields[1], true), getData($fields[2], false), getData($fields[3], false),false);
+    }
+}

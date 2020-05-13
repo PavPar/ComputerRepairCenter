@@ -1,3 +1,6 @@
+@import url(../ticket/__comment/ticket__comment.css);
+@import url(../ticket/__input/ticket__input.css);
+
 .ticket{
     display: flex;
     flex-direction: column;

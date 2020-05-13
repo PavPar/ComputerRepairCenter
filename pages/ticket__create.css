@@ -12,3 +12,6 @@
 @import url(../blocks/btn/_type/btn_type-logout.css);
 @import url(../blocks/btn/_type/btn_type-user.css);
 @import url(../blocks/btn/_type/btn_type-add.css);
+@import url(../blocks/btn/_type/btn_type-accept.css);
+@import url(../blocks/btn/_type/btn_type-decline-yellow.css);
+

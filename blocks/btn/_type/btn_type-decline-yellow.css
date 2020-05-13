@@ -1,0 +1,14 @@
+.btn_type-decline-yellow{
+    background-color: orange;
+    transition: box-shadow ease-out .5s;
+    /* background-image:url(../../../images/plus.svg); */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25px 25px; 
+    width: 500px;
+    height: 50px;
+}
+
+.btn_type-decline-yellow:hover{
+    box-shadow: goldenrod 5px 5px;
+}
