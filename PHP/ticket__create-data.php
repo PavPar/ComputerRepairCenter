@@ -15,3 +15,5 @@ if (getData("btn_self", false) != null) {
         saveTicketData(getData($fields[0], true), getData($fields[1], true), getData($fields[2], false), getData($fields[3], false),false);
     }
 }
+
+header("Location: master.php");

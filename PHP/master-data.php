@@ -1,6 +1,6 @@
 <?php
 include "db.php";
-
+$usr = getUserData();
 function fillCard($ticket_name, $ticket_date, $ticket_dept, $ticket_customer)
 {
     return

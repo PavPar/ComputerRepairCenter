@@ -31,6 +31,7 @@ function getData($key, $mandatory)
 
 };
 
+//Проверка существования сессии => логина пользователя
 function userAuthCheck()
 {
     if (!array_key_exists('user_id', $_SESSION)) {
@@ -43,6 +44,32 @@ function userLogOut()
 {
     session_abort();
     header('Location: index.php');
+}
+
+//Получение логина,имени,фамилии, роли пользователя
+function getUserData()
+{
+    global $conn;
+    $sql = 'SELECT role_name,login,name,lastname,middlename FROM db.master a JOIN db.role b ON (a.role_id = b.role_id) WHERE master_id = ' . $_SESSION['user_id'];
+    $result = $conn->query($sql);
+    if ($result) {
+        if ($result->num_rows == 1) {
+            $data = $result->fetch_assoc();
+            $usr = array(
+                "role"=>$data["role_name"],
+                "login"=>$data["login"],
+                "name"=>$data["name"],
+                "lastname"=>$data["lastname"],
+                "middlename"=>$data["middlename"]
+            );
+            return $usr;
+        } else {
+            return "getUserData:No Such User!";
+        }
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
+    }
 }
 
 //Проверка логина и пароля пользователя
@@ -97,14 +124,14 @@ function saveTicketData($owner_name, $owner_phone, $device_name, $comment, $self
     userAuthCheck();
     $sql = 'INSERT INTO ' . $tickets_table . " VALUES (ticket_id,sysdate(),'" . $owner_name . "','" . $owner_phone . "'," . $_SESSION["user_id"] . ",1,'" . $device_name . "','1','1','" . $comment . "')";
     $result = $conn->query($sql);
-    CheckQuerry($result,$sql);
+    CheckQuerry($result, $sql);
     if ($self) {
-        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (".mysqli_insert_id($conn).",'test_self'," . $_SESSION["user_id"] .')';
-    }else{
-        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (".mysqli_insert_id($conn).",'test_pool'," .'null)';
+        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (" . mysqli_insert_id($conn) . ",'test_self'," . $_SESSION["user_id"] . ')';
+    } else {
+        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (" . mysqli_insert_id($conn) . ",'test_pool'," . 'null)';
     }
     $result = $conn->query($sql);
-    CheckQuerry($result,$sql);
+    CheckQuerry($result, $sql);
 }
 
 //Получить карточки текущего мастера
@@ -149,7 +176,7 @@ function getListElements($table_name)
 }
 
 //Проверка выполнения SQL запроса в бд
-function CheckQuerry($result,$sql)
+function CheckQuerry($result, $sql)
 {
     global $conn;
     if ($result) {
