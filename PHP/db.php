@@ -87,17 +87,23 @@ function saveTicketData($owner_name, $owner_phone, $device_name, $comment)
     }
 }
 
+//Получить карточки текущего мастера
 function getCards()
 {
     global $conn;
     global $tickets_table;
-    $sql = 'SELECT ticket_id,ticket_date,department_id,"owner" FROM ' . $tickets_table;
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM ' . $tickets_table. ' WHERE master_id = ' . $_SESSION['user_id'] . '';
     $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo fillCard($row["ticket_id"], $row["ticket_date"], $row["department_id"], $row["owner"]);
+    if ($result) {
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo fillCard($row["ticket_id"], $row["ticket_date"], $row["department_id"], $row["owner"]);
+            }
+        } else {
+            echo "Empty";
         }
     } else {
-        echo "Empty";
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
     }
 }

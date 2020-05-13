@@ -13,6 +13,9 @@ function retriveUserData()
 };
 
 if(userValidation(retriveUserData())){
-    echo $_SESSION['user_id'];
-    echo checkPrivalge();
+    if(checkPrivalge()){
+        header('Location: admin.php');
+    }else{
+        header('Location: master.php');
+    }
 }
