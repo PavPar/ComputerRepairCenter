@@ -11,7 +11,7 @@ function fillCard($ticket_name, $ticket_date, $ticket_dept, $ticket_customer)
         <h3 class="card__dept">' . $ticket_dept . '</h3>
         <h3 class="card__name">' . $ticket_customer . '</h3>
         <button type="submit" name="ticket-info" class="btn btn_type-card-info" value='.$ticket_name.' formaction="ticket-info.php">Подробнее</button>
-        <button type="submit" name="ticket-close" class="btn btn_type-card-close" value='.$ticket_name.' formaction="ticket-close.php">Закрыть</button>
+        <button type="submit" name="ticket-close" class="btn btn_type-card-close" value='.$ticket_name.' formaction="ticket_close.php">Закрыть</button>
     </div>
     ';
 }

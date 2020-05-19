@@ -161,7 +161,7 @@ function getTicketStates()
 function getTicketInfo($ticket_id)
 {
     global $conn;
-    $sql = 'SELECT * FROM (db.ticket a join db.ticket_history b on (a.ticket_id = b.ticket_id)) WHERE a.ticket_id = '.$ticket_id;
+    $sql = 'SELECT * FROM (db.ticket a join db.ticket_history b on (a.ticket_id = b.ticket_id)) WHERE a.ticket_id = ' . $ticket_id;
     $result = $conn->query($sql);
 
     $info = array();
@@ -179,9 +179,40 @@ function getTicketInfo($ticket_id)
             }
         }
     }
-    return array_change_key_case($info, CASE_LOWER);;
+    return array_change_key_case($info, CASE_LOWER);
 }
 
+//Изменение состояния тикета
+function changeState($statename, $ticket_id)
+{
+    global $conn;
+    $states = getNamedValue('db.ticket_state');
+    $res = array_search($statename, $states);
+    if ($res) {
+        $sql = 'UPDATE db.ticket_history SET state=' . $res . ' WHERE ticket_id = ' . $ticket_id;
+        $result = $conn->query($sql);
+        CheckQuerry($result, $sql);
+    } else {
+        echo "Err: " . $statename . " Doesnt exist !";
+    }
+}
+
+//Закрытие тикета
+function closeTicket($ticket_id, $handout_owner, $handout_owner_phone, $handout_department, $handout_comment)
+{
+    global $conn;
+    $sql = 'UPDATE db.ticket_history
+    SET
+    handout_date = SYSDATE(),
+    handout_owner = "' . $handout_owner . '",
+    handout_owner_phone ="' . $handout_owner_phone . '",
+    handout_department_id = "' . $handout_department . '",
+    final_comment ="' . $handout_comment . '"
+    WHERE ticket_id = ' . $ticket_id;
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+    changeState("finished",$ticket_id);
+}
 //Получение значений которые хранятся в таблице id,name
 function getNamedValue($table_name)
 {
