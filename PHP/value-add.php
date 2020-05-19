@@ -20,7 +20,7 @@
         </div>
     </header>
     <main class="content">
-      <?php showTicketInfo(getTicketInfo(getData('ticket-info', true))); ?>
+        
     </main>
     <footer class="footer"></footer>
 </body>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASTER PAGE</title>
+    <link href="../pages/master.css" rel="stylesheet">
+</head>
+
+<body class="page">
+    <header class="header">
+        <div class="acc-info">
+           <h1>Отедел по ремонту ПК</h1>
+        </div>
+        <form class="form-login" method="POST" action="./PHP/auth-check.php">
+            <input required type="text" name="user_login">
+            <input required type="password" name="user_password">
+            <input type="submit" value="Войти">
+        </form>
+    </header>
+    <main class="content">
+        <form method="POST">
+            <input type="text" required>
+            <button type="submit"> Получить информацию о состоянии тикета</button>
+        </form>
+    </main>
+    <footer class="footer"></footer>
+</body>
+
+</html>

@@ -237,12 +237,32 @@ function getNamedValue($table_name)
     }
 }
 //Получить карточки текущего мастера
-function getCards()
+function getPoolCards()
 {
     global $conn;
     global $tickets_table;
     userAuthCheck();
-    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM ' . $tickets_table . ' WHERE master_id = ' . $_SESSION['user_id'] . '';
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM ' . $tickets_table . ' WHERE state = ' . array_search('pool', getNamedValue('db.ticket_state')) . '';
+    $result = $conn->query($sql);
+    if ($result) {
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo fillCard($row["ticket_id"], $row["ticket_date"], $row["department_id"], $row["owner"]);
+            }
+        } else {
+            echo "Empty";
+        }
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
+    }
+}
+
+function getSpecificCards(){
+    global $conn;
+    global $tickets_table;
+    userAuthCheck();
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE b.master_id = ' . $_SESSION['user_id'];
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows > 0) {
