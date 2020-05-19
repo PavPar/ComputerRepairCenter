@@ -56,11 +56,11 @@ function getUserData()
         if ($result->num_rows == 1) {
             $data = $result->fetch_assoc();
             $usr = array(
-                "role"=>$data["role_name"],
-                "login"=>$data["login"],
-                "name"=>$data["name"],
-                "lastname"=>$data["lastname"],
-                "middlename"=>$data["middlename"]
+                "role" => $data["role_name"],
+                "login" => $data["login"],
+                "name" => $data["name"],
+                "lastname" => $data["lastname"],
+                "middlename" => $data["middlename"],
             );
             return $usr;
         } else {
@@ -116,24 +116,95 @@ function checkPrivalge()
 }
 
 //Сохранение данных тикета
-function saveTicketData($owner_name, $owner_phone, $device_name, $comment, $self)
+function saveTicketData($owner_name, $owner_phone, $ticket_type, $device_name, $tech_type, $department, $comment, $self)
 {
     global $conn;
     global $tickets_table;
-
     userAuthCheck();
-    $sql = 'INSERT INTO ' . $tickets_table . " VALUES (ticket_id,sysdate(),'" . $owner_name . "','" . $owner_phone . "'," . $_SESSION["user_id"] . ",1,'" . $device_name . "','1','1','" . $comment . "')";
+
+    $states = getTicketStates();
+
+    $sql = 'INSERT INTO ' . $tickets_table . " VALUES (ticket_id,sysdate(),'" . $owner_name . "','" . $owner_phone . "'," . $_SESSION["user_id"] . "," . $ticket_type . ',"' . $device_name . '",' . $tech_type . ',' . $department . ',"' . $comment . '")';
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
     if ($self) {
-        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (" . mysqli_insert_id($conn) . ",'test_self'," . $_SESSION["user_id"] . ')';
+        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["in process"] . "," . $_SESSION["user_id"] . ')';
     } else {
-        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (" . mysqli_insert_id($conn) . ",'test_pool'," . 'null)';
+        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["pool"] . "," . 'null)';
     }
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
 }
 
+//Получение возможных состояний тикета
+function getTicketStates()
+{
+    global $conn;
+    $sql = 'SELECT * FROM db.ticket_state';
+    $result = $conn->query($sql);
+
+    $states = array();
+    CheckQuerry($result, $sql);
+    if ($result) {
+        $i = 0;
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $states[$row["ticket_state"]] = $row["ticket_state_id"];
+                $i++;
+            }
+        }
+    }
+    return $states;
+}
+
+//Получение всей информации о тикете (с историей) для текущего пользователя
+function getTicketInfo($ticket_id)
+{
+    global $conn;
+    $sql = 'SELECT * FROM (db.ticket a join db.ticket_history b on (a.ticket_id = b.ticket_id)) WHERE a.ticket_id = '.$ticket_id;
+    $result = $conn->query($sql);
+
+    $info = array();
+    CheckQuerry($result, $sql);
+    if ($result) {
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $keys = array_keys($row);
+                $vals = array_values($row);
+                for ($i = 0; $i < count($keys); $i++) {
+                    $info[$keys[$i]] = $vals[$i];
+                }
+
+            }
+        }
+    }
+    return array_change_key_case($info, CASE_LOWER);;
+}
+
+//Получение значений которые хранятся в таблице id,name
+function getNamedValue($table_name)
+{
+    global $conn;
+    $sql = 'SELECT * FROM ' . $table_name;
+    $result = $conn->query($sql);
+    $data = array();
+    if ($result) {
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $vals = array_values($row);
+                for ($i = 0; $i < count($vals); $i++) {
+                    $data[$vals[0]] = $vals[1];
+                }
+            }
+            return array_change_key_case($data, CASE_LOWER);
+        }
+        return;
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
+    }
+}
 //Получить карточки текущего мастера
 function getCards()
 {

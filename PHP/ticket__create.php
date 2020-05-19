@@ -23,19 +23,26 @@
             <a href="ticket__create.php" class="btn btn_type-add"></a>
         </nav>
         <form class="ticket" action="ticket__create-data.php" method="POST">
+        <select class="ticket__input" name="ticket_type">
+                <?php getListElements("db.ticket_type")?>
+            </select>
             <!-- <input type="datetime-local" value=""> -->
             <input class="ticket__input" name="owner_name" type="text" placeholder="Имя Ответственного">
             <input class="ticket__input" name="owner_phone" type="phone" placeholder="Телефон Ответственного">
             <!-- Департамент -->
-            
-            <select class="ticket__input" id="departments">
+
+            <select class="ticket__input" name="departments">
                 <?php getListElements("db.department")?>
             </select>
-           
+
             <!-- Вид устройства -->
-            <select class="ticket__input" id="tech-type">
+            <select class="ticket__input" name="tech_type">
                 <?php getListElements("db.tech_type")?>
             </select>
+
+
+                <?php print_r(getTicketStates())?>
+
 
             <input class="ticket__input" name="device_name" type="text" placeholder="Имя устройства (Если Есть)">
             <textarea class="ticket__comment" name="comment" type="text" placeholder="Комментарий"></textarea>
