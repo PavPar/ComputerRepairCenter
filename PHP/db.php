@@ -307,3 +307,29 @@ function CheckQuerry($result, $sql)
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 }
+
+//Получить всю информацию о пользователе 
+function adminGetAllUserInfo($user_id){
+    global $conn;
+    $sql = 'SELECT * FROM db.master';
+    $result = $conn->query($sql);
+    if ($result) {
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $row = array_values($row);
+                echo '<option value="' . $row[0] . '">' . $row[1] . '</option>';
+            }
+        }
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
+    }
+}
+//Добавить пользователя
+function adminAddUser($user_login,$user_password,$user_firstname,$user_lastname,$user_middlename){
+
+}
+//Удалить пользователя
+function adminRemoveUser($user_id){
+    
+}
