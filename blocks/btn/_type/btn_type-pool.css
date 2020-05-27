@@ -1,0 +1,8 @@
+.btn_type-pool{
+    background-color: orange;
+    transition: box-shadow ease-out .5s;
+}
+
+.btn_type-pool:hover{
+    box-shadow: darkgoldenrod 0 5px;
+}

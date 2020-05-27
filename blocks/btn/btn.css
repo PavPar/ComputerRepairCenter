@@ -4,9 +4,10 @@
     font-size: 25px;
     margin-bottom: 10px;
     color: white;
-    width: 350px;
+    width: 250px;
     height: 50px;
     text-align:center;
+    background-color: lightblue;
 }
 
 .btn:last-of-type {

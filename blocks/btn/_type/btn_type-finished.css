@@ -1,0 +1,8 @@
+.btn_type-finished{
+    background-color: lightgreen;;
+    transition: box-shadow ease-out .5s;
+}
+
+.btn_type-finished:hover{
+    box-shadow: rgb(130, 199, 118) 0 5px;
+}

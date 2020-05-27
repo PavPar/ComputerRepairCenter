@@ -15,4 +15,10 @@
 @import url(../blocks/btn/_type/btn_type-add.css);
 @import url(../blocks/btn/_type/btn_type-card-close.css);
 @import url(../blocks/btn/_type/btn_type-card-info.css);
+@import url(../blocks/btn/_type/btn_type-pool.css);
+@import url(../blocks/btn/_type/btn_type-finished.css);
+@import url(../blocks/btn/_type/btn_type-closed.css);
+@import url(../blocks/btn/_type/btn_type-all.css);
+
+
 @import url(../fonts/Inter/inter.css);

@@ -9,7 +9,7 @@
 </head>
 
 <body class="page">
-    <header class="header">
+    <!-- <header class="header">
         <div class="acc-info">
             <img class="acc-info__logo" src="../images/inqusition-01.svg">
             <h2 class="acc-info__name">Master_1</h2>
@@ -18,7 +18,8 @@
                 <button  class="btn btn_type-logout" value="logout" formaction="logout.php">Выйти из системы</button>
             </form>
         </div>
-    </header>
+    </header> -->
+    <?php createHeader()?>
     <main class="content">
       <?php showTicketInfo(getTicketInfo(getData('ticket-info', true))); ?>
     </main>

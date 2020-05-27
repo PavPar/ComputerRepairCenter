@@ -1,0 +1,8 @@
+.btn_type-closed{
+    background-color: green;
+    transition: box-shadow ease-out .5s;
+}
+
+.btn_type-closed:hover{
+    box-shadow: darkgreen 0 5px;
+}

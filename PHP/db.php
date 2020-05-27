@@ -39,6 +39,14 @@ function userAuthCheck()
     }
 }
 
+function userCheck()
+{
+    if (!array_key_exists('user_id', $_SESSION)) {
+        return false;
+    }
+    return true;
+}
+
 //Процедура выхода пользователя из системы
 function userLogOut()
 {
@@ -46,6 +54,28 @@ function userLogOut()
     header('Location: index.php');
 }
 
+//Получение фИО мастера 
+function getMasterName($id){
+    global $conn;
+    $sql = 'SELECT name,lastname,middlename FROM db.master WHERE master_id = ' . $id;
+    $result = $conn->query($sql);
+    if ($result) {
+        if ($result->num_rows == 1) {
+            $data = $result->fetch_assoc();
+            $usr = array(
+                "name" => $data["name"],
+                "lastname" => $data["lastname"],
+                "middlename" => $data["middlename"],
+            );
+            return $usr;
+        } else {
+            return "No master";
+        }
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
+    }
+}
 //Получение логина,имени,фамилии, роли пользователя
 function getUserData()
 {
@@ -177,7 +207,7 @@ function getTicketInfo($ticket_id)
                 }
 
             }
-        }
+        } 
     }
     return array_change_key_case($info, CASE_LOWER);
 }
@@ -211,7 +241,7 @@ function closeTicket($ticket_id, $handout_owner, $handout_owner_phone, $handout_
     WHERE ticket_id = ' . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
-    changeState("finished",$ticket_id);
+    changeState("finished", $ticket_id);
 }
 //Получение значений которые хранятся в таблице id,name
 function getNamedValue($table_name)
@@ -242,7 +272,37 @@ function getPoolCards()
     global $conn;
     global $tickets_table;
     userAuthCheck();
-    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM ' . $tickets_table . ' WHERE state = ' . array_search('pool', getNamedValue('db.ticket_state')) . '';
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner,state FROM db.ticket a JOiN db.ticket_history USING(Ticket_id) WHERE state = ' . array_search('pool', getNamedValue('db.ticket_state')) . '';
+    $result = $conn->query($sql);
+    if ($result) {
+        if ($result->num_rows > 0) {
+            $cards = array();
+            while ($row = $result->fetch_assoc()) {
+                $card = array(
+                    "id" => $row["ticket_id"],
+                    "date" => $row["ticket_date"],
+                    "department" => getNamedValue('db.department')[$row["department_id"]],
+                    "owner" => $row["owner"],
+                    "state" => getNamedValue('db.ticket_state')[$row["state"]],
+                );
+                array_push($cards, $card);
+            }
+            return json_encode($cards, JSON_HEX_TAG);
+        } else {
+            echo "Empty";
+        }
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
+    }
+}
+
+function getSpecificCards()
+{
+    global $conn;
+    global $tickets_table;
+    userAuthCheck();
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE b.master_id = ' . $_SESSION['user_id'];
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows > 0) {
@@ -258,19 +318,32 @@ function getPoolCards()
     }
 }
 
-function getSpecificCards(){
+//Получить массив карточек
+
+function getCardsArray()
+{
     global $conn;
     global $tickets_table;
     userAuthCheck();
-    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE b.master_id = ' . $_SESSION['user_id'];
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner,state FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE b.master_id = ' . $_SESSION['user_id'];
     $result = $conn->query($sql);
     if ($result) {
+        $cards = array();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo fillCard($row["ticket_id"], $row["ticket_date"], $row["department_id"], $row["owner"]);
+                $card = array(
+                    "id" => $row["ticket_id"],
+                    "date" => $row["ticket_date"],
+                    "department" => getNamedValue('db.department')[$row["department_id"]],
+                    "owner" => $row["owner"],
+                    "state" => getNamedValue('db.ticket_state')[$row["state"]],
+                );
+                array_push($cards, $card);
             }
+            return json_encode($cards, JSON_HEX_TAG);
+            // return serialize($cards);
         } else {
-            echo "Empty";
+            echo json_encode($cards, JSON_HEX_TAG);
         }
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
@@ -308,8 +381,9 @@ function CheckQuerry($result, $sql)
     }
 }
 
-//Получить всю информацию о пользователе 
-function adminGetAllUserInfo($user_id){
+//Получить всю информацию о пользователе
+function adminGetAllUserInfo($user_id)
+{
     global $conn;
     $sql = 'SELECT * FROM db.master';
     $result = $conn->query($sql);
@@ -326,10 +400,15 @@ function adminGetAllUserInfo($user_id){
     }
 }
 //Добавить пользователя
-function adminAddUser($user_login,$user_password,$user_firstname,$user_lastname,$user_middlename){
-
+function adminAddUser($user_login, $user_password, $user_firstname, $user_lastname, $user_middlename)
+{
+    global $conn;
+    $sql = 'INSERT INTO db.master VALUES (master_id,role_id,"' . $user_login . '","' . $user_password . '","' . $user_firstname . '","' . $user_lastname . '","' . $user_middlename . '")';
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
 }
 //Удалить пользователя
-function adminRemoveUser($user_id){
-    
+function adminRemoveUser($user_id)
+{
+
 }

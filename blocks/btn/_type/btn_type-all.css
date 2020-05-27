@@ -1,0 +1,8 @@
+.btn_type-all{
+    background-color: gray;
+    transition: box-shadow ease-out .5s;
+}
+
+.btn_type-all:hover{
+    box-shadow: darkgray 0 5px;
+}
