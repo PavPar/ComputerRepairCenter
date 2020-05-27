@@ -1,3 +1,4 @@
+<?php include("./PHP/index-data.php");?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,16 +9,7 @@
 </head>
 
 <body class="page">
-    <header class="header">
-        <div class="acc-info">
-           <h1>Отедел по ремонту ПК</h1>
-        </div>
-        <form class="form-login acc-info" method="POST" action="./PHP/auth-check.php">
-            <input required type="text" name="user_login">
-            <input required type="password" name="user_password">
-            <input type="submit" value="Войти">
-        </form>
-    </header>
+    <?php createIndexHeader()?>
     <main class="content">
         <form method="POST" class="acc-info" action="php/ticket-info.php">
             <input name="ticket-info" type="text" required>

@@ -4,7 +4,6 @@ $username = "root";
 $password = "vertrigo";
 $conn = new mysqli($servername, $username, $password);
 $tickets_table = "db.ticket";
-
 session_start();
 
 if ($conn->connect_error) {

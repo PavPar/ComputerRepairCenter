@@ -19,5 +19,5 @@ if(userValidation(retriveUserData())){
         header('Location: master.php');
     }
 }else{
-    header('Location: ../index.html');
+    header('Location: ../index.php');
 }

@@ -23,4 +23,3 @@ class parse_class
         }
     }
 }
-$parse = new parse_class;
