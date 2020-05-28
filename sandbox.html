@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<?php include "ticket-info-data.php"?>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASTER PAGE</title>
+    <link href="../pages/ticket__create.css" rel="stylesheet">
+</head>
+
+<body class="page">
+    <main class="content">
+        <div class="ticket-info">
+            <table class="ticket-info__table">
+                <tr class="ticket-info__row ticket-info__header">
+                    <td class="ticket-info__cell" colspan="2">
+                        <p> Заказ № {ID}</p>
+                        <p> Состояние заказа : {STATE}</p>
+                    </td>
+                </tr>
+                <tr class="ticket-info__row">
+                    <td class="ticket-info__cell">
+                        <p> Мастер прнявший заявку : {MASTER_ID_IN}</p>
+                        <p> ФИО Хозяина : {OWNER}</p>
+                    </td>
+                    <td class="ticket-info__cell">
+                        <p> Дата приема : {DATE}</p>
+                        <p> Номер телефона хозяина : {PHONE}</p>
+                        <p> Отдел Хозяина: {OWNER_DEPT}</p>
+                    </td>
+                </tr>
+                <tr class="ticket-info__row">
+                    <td class="ticket-info__cell" colspan="2">
+                        <p> Тип заказа : {TYPE}</p>
+                        <p> Тип техники : {TECH_TYPE}</p>
+                    </td>
+                </tr>
+                <tr class="ticket-info__row">
+                    <td class="ticket-info__cell" colspan="2">
+                        <p> Комментарий на момент приема: </p>
+                        <p> {COMMENT_IN}</p>
+                    </td>
+                </tr>
+                <tr class="ticket-info__row">
+                    <td class="ticket-info__cell" colspan="2">
+                        <p> Комментарий о проделанной работе: </p>
+                        <p>{COMMENT_OUT}</p>
+                    </td>
+                </tr>
+                <tr class="ticket-info__row">
+                    <td class="ticket-info__cell" colspan="2">
+                        <p> ФИО Курьера : {COURIER}</p>
+                        <p> Номер телефона Курьера : {COURIER_PHONE}</p>
+                        <p> Отдел Курьера : {COURIER_DEPT}</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </main>
+    <footer class="footer"></footer>
+</body>
+
+</html>

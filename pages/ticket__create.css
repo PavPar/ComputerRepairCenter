@@ -15,4 +15,5 @@
 @import url(../blocks/btn/_type/btn_type-accept.css);
 @import url(../blocks/btn/_type/btn_type-decline-yellow.css);
 
+@import url(../blocks/ticket-info/ticket-info.css);
 @import url(../fonts/Inter/inter.css);

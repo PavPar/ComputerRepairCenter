@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
-<?php include "ticket-info-data.php"?>
+<?php include "db.php"?>
+<?php userAuthCheck();?>
+<?php checkPrivalge()?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

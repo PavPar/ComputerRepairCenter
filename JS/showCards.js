@@ -28,6 +28,24 @@ function fillCard(rawData) {
     newCard.querySelector(cardFields.btnInfo).setAttribute('value',rawData.id);
     newCard.querySelector(cardFields.btnClose).setAttribute('value',rawData.id);
     
+    if(rawData.state == "pool"){
+        newCard.querySelector(cardFields.btnClose).setAttribute("formaction","ticket_finish.php");
+        newCard.querySelector(".card").classList.add("card__state-pool");
+    }
+    if(rawData.state == "in process"){
+        newCard.querySelector(cardFields.btnClose).setAttribute("formaction","ticket_finish.php");
+        newCard.querySelector(".card").classList.add("card__state-process");
+    }
+    if(rawData.state == "finished"){
+        newCard.querySelector(cardFields.btnClose).setAttribute("formaction","ticket_close.php");
+        newCard.querySelector(cardFields.btnClose).textContent = "Выдать"
+        newCard.querySelector(".card").classList.add("card__state-finished");
+    }
+    if(rawData.state == "closed"){
+        newCard.querySelector(cardFields.btnClose).style.display="none";
+        newCard.querySelector(".card").classList.add("card__state-closed");
+    }
+    
     return newCard;
 }
 

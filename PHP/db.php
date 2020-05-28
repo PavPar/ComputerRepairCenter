@@ -34,7 +34,7 @@ function getData($key, $mandatory)
 function userAuthCheck()
 {
     if (!array_key_exists('user_id', $_SESSION)) {
-        die("Session is missing user id");
+        die(header("Location: ../index.php"));
     }
 }
 
@@ -46,15 +46,9 @@ function userCheck()
     return true;
 }
 
-//Процедура выхода пользователя из системы
-function userLogOut()
+//Получение фИО мастера
+function getMasterName($id)
 {
-    session_abort();
-    header('Location: index.php');
-}
-
-//Получение фИО мастера 
-function getMasterName($id){
     global $conn;
     $sql = 'SELECT name,lastname,middlename FROM db.master WHERE master_id = ' . $id;
     $result = $conn->query($sql);
@@ -134,7 +128,7 @@ function checkPrivalge()
             if ($data['role_id'] == 0) {
                 return true;
             } else {
-                return false;
+                header("Location: ../index.php");
             }
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
@@ -143,6 +137,8 @@ function checkPrivalge()
     }
     die('Session is empty!');
 }
+
+
 
 //Сохранение данных тикета
 function saveTicketData($owner_name, $owner_phone, $ticket_type, $device_name, $tech_type, $department, $comment, $self)
@@ -157,9 +153,9 @@ function saveTicketData($owner_name, $owner_phone, $ticket_type, $device_name, $
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
     if ($self) {
-        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["in process"] . "," . $_SESSION["user_id"] . ')';
+        $sql = "INSERT INTO db.ticket_history (ticket_id,state,worker_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["in process"] . "," . $_SESSION["user_id"] . ')';
     } else {
-        $sql = "INSERT INTO db.ticket_history (ticket_id,state,master_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["pool"] . "," . 'null)';
+        $sql = "INSERT INTO db.ticket_history (ticket_id,state,worker_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["pool"] . "," . 'null)';
     }
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
@@ -206,7 +202,7 @@ function getTicketInfo($ticket_id)
                 }
 
             }
-        } 
+        }
     }
     return array_change_key_case($info, CASE_LOWER);
 }
@@ -226,8 +222,21 @@ function changeState($statename, $ticket_id)
     }
 }
 
+//Завершение тикета (finished, но еще на забрали)
+function finishTicket($ticket_id, $handout_comment)
+{
+    global $conn;
+    $sql = 'UPDATE db.ticket_history
+    SET
+    final_comment ="' . $handout_comment . '."
+    WHERE ticket_id = ' . $ticket_id;
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+    changeState("finished", $ticket_id);
+}
+
 //Закрытие тикета
-function closeTicket($ticket_id, $handout_owner, $handout_owner_phone, $handout_department, $handout_comment)
+function closeTicket($ticket_id, $handout_owner, $handout_owner_phone, $handout_department)
 {
     global $conn;
     $sql = 'UPDATE db.ticket_history
@@ -235,12 +244,11 @@ function closeTicket($ticket_id, $handout_owner, $handout_owner_phone, $handout_
     handout_date = SYSDATE(),
     handout_owner = "' . $handout_owner . '",
     handout_owner_phone ="' . $handout_owner_phone . '",
-    handout_department_id = "' . $handout_department . '",
-    final_comment ="' . $handout_comment . '"
+    handout_department_id = "' . $handout_department . '".
     WHERE ticket_id = ' . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
-    changeState("finished", $ticket_id);
+    changeState("closed", $ticket_id);
 }
 //Получение значений которые хранятся в таблице id,name
 function getNamedValue($table_name)
@@ -301,7 +309,7 @@ function getSpecificCards()
     global $conn;
     global $tickets_table;
     userAuthCheck();
-    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE b.master_id = ' . $_SESSION['user_id'];
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE worker_id = ' . $_SESSION['user_id'];
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows > 0) {
@@ -324,7 +332,7 @@ function getCardsArray()
     global $conn;
     global $tickets_table;
     userAuthCheck();
-    $sql = 'SELECT ticket_id,ticket_date,department_id,owner,state FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE b.master_id = ' . $_SESSION['user_id'];
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner,state FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE worker_id = ' . $_SESSION['user_id'];
     $result = $conn->query($sql);
     if ($result) {
         $cards = array();

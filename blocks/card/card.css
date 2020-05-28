@@ -2,11 +2,15 @@
 @import url(./__name/card__name.css);
 @import url(./__dept/card__dept.css);
 @import url(./__date/card__date.css);
+@import url(./__state/card__state-closed.css);
+@import url(./__state/card__state-finished.css);
+@import url(./__state/card__state-pool.css);
+@import url(./__state/card__state-process.css);
 
 .card{
     display: flex;
     flex-direction: column;
-    background-color: lightgreen;
+    /* background-color: lightgreen; */
     max-width: 450px;
     height: 450px;
     width: 100%;

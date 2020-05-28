@@ -1,0 +1,8 @@
+@import url(./__cell/ticket-info__cell.css);
+@import url(./__header/ticket-info__header.css);
+@import url(./__row/ticket-info__row.css);
+@import url(./__table/ticket-info__table.css);
+
+.ticket-info{
+    margin: auto;
+}

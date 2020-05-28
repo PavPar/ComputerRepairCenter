@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
-<?php include "ticket-info-data.php"?>
+<?php include "db.php"?>
 <?php userAuthCheck();?>
-<?php checkPrivalge()?>
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +21,11 @@
         </div>
     </header>
     <main class="content">
-        
+            <form class="ticket" action="ticket_finish-data.php" method="POST">
+                <h2>Тикет № <?php echo getData('ticket-close', true); ?></h2>
+                        <textarea class="ticket__comment" name="comment" type="text" placeholder="Комментарий"></textarea>
+                        <button class="btn btn_type-accept" type="submit" value=<?php echo getData('ticket-close', true); ?> name="btn_close">Закрыть тикет</button>
+            </form>
     </main>
     <footer class="footer"></footer>
 </body>

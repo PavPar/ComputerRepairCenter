@@ -1,6 +1,6 @@
+<?php include "master-data.php"?>
 <!DOCTYPE html>
 <html lang="ru">
-<?php include "master-data.php"?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +25,7 @@
             <button class="btn btn_type-finished">Заврешенные</button>
             <button class="btn btn_type-closed">Закрытые</button>
             <button class="btn btn_type-pool">Pool</button>
-            <button class="btn btn_type-all">Все</button>
+            <!-- <button class="btn btn_type-all">Все</button> -->
         <a href="ticket__create.php" class="btn btn_type-add"></a>
     </nav>
         <form class="cards">

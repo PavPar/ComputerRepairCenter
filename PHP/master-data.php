@@ -1,5 +1,6 @@
 <?php
 include "db.php";
+userAuthCheck();
 $usr = getUserData();
 function fillCard($ticket_name, $ticket_date, $ticket_dept, $ticket_customer)
 {
