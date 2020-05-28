@@ -27,7 +27,7 @@
                 <input required class="ticket__input" name="handout_name" type="text" placeholder="Имя Принявшего">
                 <input required class="ticket__input" name="handout_phone" type="phone" placeholder="Телефон Принявшего">
                 <select required class="ticket__input" name="departments">
-                    <?php getListElements("db.department")?>
+                    <?php echo getListElements("db.department")?>
                 </select>
                 <button class="btn btn_type-accept" type="submit" value=<?php echo getData('ticket-close', true);?> name="btn_close">Закрыть тикет</button>
             </form>

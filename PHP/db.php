@@ -138,7 +138,6 @@ function checkPrivalge()
     die('Session is empty!');
 }
 
-
 //Сохранение данных тикета
 function saveTicketData($owner_name, $owner_phone, $ticket_type, $device_name, $tech_type, $department, $comment, $self)
 {
@@ -365,10 +364,40 @@ function getListElements($table_name)
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows > 0) {
+            $res = "";
             while ($row = $result->fetch_assoc()) {
                 $row = array_values($row);
-                echo '<option value="' . $row[0] . '">' . $row[1] . '</option>';
+                $res = $res. '<option value="' . $row[0] . '">' . $row[1] . '</option>';
             }
+            return $res;
+        }
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
+    }
+}
+
+//Получить данные из таблиц в которых два столбца (Id,имя опции) для помещения в таблицу
+function getTableElements($table_name)
+{
+    global $conn;
+    require_once 'template.php';
+    $parse = new parse_class;
+    $sql = 'SELECT * FROM ' . $table_name;
+    
+    $result = $conn->query($sql);
+    if ($result) {
+        if ($result->num_rows > 0) {
+            $res = "";
+            while ($row = $result->fetch_assoc()) {
+                $row = array_values($row);
+                $parse->get_tpl('../templates/table/table-row.tpl');
+                $parse->set_tpl('{VAL_0}', $row[0]);
+                $parse->set_tpl('{VAL_1}', $row[1]);
+                $parse->tpl_parse();
+                $res = $res . $parse->template;
+            }
+            return $res;
         }
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
@@ -381,7 +410,7 @@ function CheckQuerry($result, $sql)
 {
     global $conn;
     if ($result) {
-        echo "OK";
+        // echo "OK";
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
@@ -416,5 +445,45 @@ function adminAddUser($user_login, $user_password, $user_firstname, $user_lastna
 //Удалить пользователя
 function adminRemoveUser($user_id)
 {
+    global $conn;
+    // $sql = 'INSERT INTO db.master VALUES (master_id,role_id,"' . $user_login . '","' . $user_password . '","' . $user_firstname . '","' . $user_lastname . '","' . $user_middlename . '")';
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+}
 
+//Админ получить имена таблиц
+function valueGetTable($tableName)
+{
+    switch ($tableName) {
+        case "department":
+            return "db.department";
+        case "tech":
+            return "db.tech_type";
+    }
+}
+
+function valueGetPK($tableName)
+{
+    switch ($tableName) {
+        case "department":
+            return "department_id";
+        case "tech":
+            return "tech_type_id";
+    }
+}
+
+function addValue($value, $table)
+{
+    global $conn;
+    $sql = "INSERT INTO " . valueGetTable($table) . ' VALUES (NULL,"'.$value.'")';
+    $result = $conn->query($sql);
+    CheckQuerry($result,$sql);
+}
+
+function deleteValue($value, $table)
+{
+    global $conn;
+    $sql = "DELETE FROM " . valueGetTable($table)." WHERE ".valueGetPK($table)." = ".$value;
+    $result = $conn->query($sql);
+    CheckQuerry($result,$sql);
 }

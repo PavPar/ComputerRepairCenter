@@ -14,9 +14,9 @@ function retriveUserData()
 
 if(userValidation(retriveUserData())){
     if(checkPrivalge()){
-        header('Location: admin.php');
+        header('Location: ./admin.php');
     }else{
-        header('Location: master.php');
+        header('Location: ./master.php');
     }
 }else{
     header('Location: ../index.php');

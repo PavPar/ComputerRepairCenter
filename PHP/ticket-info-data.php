@@ -52,11 +52,12 @@ function showTicketInfo($ticket_info)
     $parse->set_tpl('{COMMENT_OUT}', $ticket_info['final_comment']);
 
     $parse->set_tpl('{COURIER}', $ticket_info['handout_owner']);
-    $parse->set_tpl('{COURIER_PHONE}', $ticket_info['handout_department_id']);
-    $parse->set_tpl('{COURIER_DEPT}', $ticket_info['final_comment']);
+    $parse->set_tpl('{COURIER_PHONE}', $ticket_info['handout_owner_phone']);
+    if($ticket_info['handout_department_id']!=""){
+        $parse->set_tpl('{COURIER_DEPT}', getNamedValue('db.department')[$ticket_info['handout_department_id']]);
+    }
     $parse->tpl_parse();
     echo $parse->template;
-    print_r($ticket_info);
     // $master = getMasterName($ticket_info['master_id']);
     // if (userCheck()) {
     //     echo '

@@ -24,7 +24,7 @@
         <nav class="nav-block">
             <a href="ticket__create.php" class="btn btn_type-add"></a>
         </nav>
-        <form class="cards" method="POST">
+        <form class="cards" method="POST" action="value-modify.php">
             <div class="card card_level-admin" method="POST">
                 <h2 class="card__title">Пользователь</h2>
                 <button type="submit" name="user-add" class="btn btn_type-card-info" value='USER_ADD'
@@ -34,17 +34,21 @@
             </div>
             <div class="card card_level-admin" method="POST">
                 <h2 class="card__title">Департамент</h2>
-                <button type="submit" name="ticket-info" class="btn btn_type-card-info" value='.$ticket_name.'
-                    formaction="ticket-info.php">Добавить</button>
-                <button type="submit" name="ticket-close" class="btn btn_type-card-close" value='.$ticket_name.'
-                    formaction="ticket_close.php">Удалить</button>
+                <button type="submit" name="value" class="btn btn_type-card-info" value='department' formaction="value-view.php"
+                   >Посмотреть</button>
+                <button type="submit" name="value_add" class="btn btn_type-card-add" value='department'
+                   >Добавить</button>
+                <button type="submit" name="value_del" class="btn btn_type-card-close" value='department'
+                    >Удалить</button>
             </div>
             <div class="card card_level-admin" method="POST">
                 <h2 class="card__title">Техника</h2>
-                <button type="submit" name="ticket-info" class="btn btn_type-card-info" value='.$ticket_name.'
-                    formaction="ticket-info.php">Добавить</button>
-                <button type="submit" name="ticket-close" class="btn btn_type-card-close" value='.$ticket_name.'
-                    formaction="ticket_close.php">Удалить</button>
+                <button type="submit" name="value" class="btn btn_type-card-info" value='tech' formaction="value-view.php"
+                   >Посмотреть</button>
+                <button type="submit" name="value_add" class="btn btn_type-card-add" value='tech'
+                   >Добавить</button>
+                <button type="submit" name="value_del" class="btn btn_type-card-close" value='tech'
+                   >Удалить</button>
             </div>
             <!-- <div class="card card_level-admin" method="POST">
                 <h2 class="card__title">Роли</h2>
