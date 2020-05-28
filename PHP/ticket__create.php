@@ -2,6 +2,7 @@
 <html lang="ru">
 <?php include "db.php"?>
 <?php userAuthCheck();?>
+<?php $usr = getUserData();?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,7 @@
     <header class="header">
         <div class="acc-info">
             <img class="acc-info__logo" src="../images/inqusition-01.svg">
-            <h2 class="acc-info__name">Master_1</h2>
+            <h2 class="acc-info__name"><?php echo $usr['login'] ?></h2>
             <form method="POST">
                 <button class="btn btn_type-user" value="master" formaction="master.php">Страница Пользователя</button>
                 <button  class="btn btn_type-logout" value="logout" formaction="logout.php">Выйти из системы</button>

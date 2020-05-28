@@ -139,7 +139,6 @@ function checkPrivalge()
 }
 
 
-
 //Сохранение данных тикета
 function saveTicketData($owner_name, $owner_phone, $ticket_type, $device_name, $tech_type, $department, $comment, $self)
 {
@@ -244,7 +243,7 @@ function closeTicket($ticket_id, $handout_owner, $handout_owner_phone, $handout_
     handout_date = SYSDATE(),
     handout_owner = "' . $handout_owner . '",
     handout_owner_phone ="' . $handout_owner_phone . '",
-    handout_department_id = "' . $handout_department . '".
+    handout_department_id = "' . $handout_department . '"
     WHERE ticket_id = ' . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
