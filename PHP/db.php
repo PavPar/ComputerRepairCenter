@@ -216,7 +216,7 @@ function changeState($statename, $ticket_id)
         $result = $conn->query($sql);
         CheckQuerry($result, $sql);
     } else {
-        echo "Err: " . $statename . " Doesnt exist !";
+        echo "Err: " . $statename . " STATE Doesnt exist !";
     }
 }
 
@@ -294,7 +294,8 @@ function getPoolCards()
             }
             return json_encode($cards, JSON_HEX_TAG);
         } else {
-            echo "Empty";
+            $cards = array();
+            return json_encode($cards, JSON_HEX_TAG);;
         }
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
@@ -412,7 +413,7 @@ function CheckQuerry($result, $sql)
     if ($result) {
         // echo "OK";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        die("Error: " . $sql . "<br>" . $conn->error);
     }
 }
 
@@ -450,7 +451,7 @@ function adminDelUser($user_id)
     global $conn;
     echo $user_id;
     poolAllTickets($user_id);
-    $sql = 'DELETE FROM db.master WHERE master_id = '.$user_id;
+    $sql = 'DELETE FROM db.master WHERE master_id = ' . $user_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
 }
@@ -460,6 +461,7 @@ function poolAllTickets($user_id)
 {
     $res = getAllMasterTickets($user_id);
     foreach ($res as &$id) {
+        saveTicketState($id[0]);
         changeState("pool", $id[0]);
         removeWorkerFromTicket($id[0]);
     }
@@ -481,13 +483,95 @@ function getAllMasterTickets($user_id)
     return $res;
 }
 
-function removeWorkerFromTicket($ticket_id){
+function removeWorkerFromTicket($ticket_id)
+{
     global $conn;
     $sql = "UPDATE db.ticket_history SET worker_id=null WHERE ticket_id=" . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
 }
 
+function assignWorkerToTicket($ticket_id, $worker_id)
+{
+    global $conn;
+    $sql = "UPDATE db.ticket_history SET worker_id =" . $worker_id . " WHERE ticket_id = " . $ticket_id;
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+}
+
+function takeTicketFromPool($ticket_id)
+{
+    changeState(getNamedValue("db.ticket_state")[restoreTicket($ticket_id)], $ticket_id);
+    assignWorkerToTicket($ticket_id, $_SESSION["user_id"]);
+}
+
+//Получить состояние тикета
+function getTicketState($ticket_id)
+{
+    global $conn;
+    $sql = "SELECT state from db.ticket_history WHERE ticket_id = " . $ticket_id;
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $row = array_values($row);
+            return $row[0];
+        }
+    }
+}
+
+// echo restoreTicket($ticket_id);
+
+function saveTicketState($ticket_id)
+{
+    global $conn;
+    if (!checkTicketPoolState($ticket_id)) {
+        $sql = "INSERT INTO db.ticket_pool_states VALUES(" . $ticket_id . "," . getTicketState($ticket_id) . ")";
+    } else {
+        $sql = "UPDATE db.ticket_pool_states SET prev_state=" . getTicketState($ticket_id) . " WHERE ticket_id = " . $ticket_id;
+    }
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+}
+//Проверить сохраненнено ли состояние тикета
+
+function checkTicketPoolState($ticket_id)
+{
+    global $conn;
+    $sql = "SELECT ticket_id FROM db.ticket_pool_states WHERE ticket_id = " . $ticket_id;
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+    if ($result->num_rows > 0) {
+        return true;
+    }
+    return false;
+}
+function retrivePoolTicketState($ticket_id)
+{
+    global $conn;
+    $sql = "SELECT prev_state FROM db.ticket_pool_states WHERE ticket_id = " . $ticket_id;
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $row = array_values($row);
+            return $row[0];
+        }
+    } else {
+        return "ignore";
+    }
+}
+
+//Восстанавливаем только исходное состояние тикета, если он находился в pool, то делать этого не нужно
+function restoreTicket($ticket_id)
+{
+    $state = retrivePoolTicketState($ticket_id);
+    if ($state == getTicketStates()['pool'] || ($state == "ignore")) {
+        return getTicketStates()['in process'];
+    } else {
+        return $state;
+    }
+}
 //Админ получить имена таблиц
 function valueGetTable($tableName)
 {

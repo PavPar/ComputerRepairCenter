@@ -36,7 +36,6 @@ function showTicketInfo($ticket_info)
         $parse->set_tpl('{MASTER_ID_IN}', $master["lastname"] . ' ' . $master["name"] . ' ' . $master["middlename"]);
     } else {
         $parse->set_tpl('{MASTER_ID_IN}', "Неизвестный");
-
     }
 
     $parse->set_tpl('{OWNER}', $ticket_info['owner']);

@@ -29,8 +29,9 @@ function fillCard(rawData) {
     newCard.querySelector(cardFields.btnClose).setAttribute('value',rawData.id);
     
     if(rawData.state == "pool"){
-        newCard.querySelector(cardFields.btnClose).setAttribute("formaction","ticket_finish.php");
+        newCard.querySelector(cardFields.btnClose).setAttribute("formaction","ticket_take.php");
         newCard.querySelector(".card").classList.add("card__state-pool");
+        newCard.querySelector(cardFields.btnClose).textContent = "Взять"
     }
     if(rawData.state == "in process"){
         newCard.querySelector(cardFields.btnClose).setAttribute("formaction","ticket_finish.php");
