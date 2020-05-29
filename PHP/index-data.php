@@ -15,3 +15,4 @@ function createIndexHeader()
     $parse->tpl_parse();
     echo $parse->template;
 }
+

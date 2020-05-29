@@ -9,30 +9,35 @@ function showTicketInfo($ticket_info)
     }
     ;
     $parse = new parse_class;
-    $master = getMasterName($ticket_info['master_id']);
 
     // if (userCheck()) {
-        switch (getNamedValue('db.ticket_state')[$ticket_info['state']]) {
-            case "pool":
-                $parse->get_tpl('../templates/ticket-info/ticket-info-pool.tpl');
-                break;
-            case "in process":
-                $parse->get_tpl('../templates/ticket-info/ticket-info-process.tpl');
-                break;
-            case "finished":
-                $parse->get_tpl('../templates/ticket-info/ticket-info-finished.tpl');
-                break;
-            case "closed":
-                $parse->get_tpl('../templates/ticket-info/ticket-info-closed.tpl');
-                break;
-        };
+    switch (getNamedValue('db.ticket_state')[$ticket_info['state']]) {
+        case "pool":
+            $parse->get_tpl('../templates/ticket-info/ticket-info-pool.tpl');
+            break;
+        case "in process":
+            $parse->get_tpl('../templates/ticket-info/ticket-info-process.tpl');
+            break;
+        case "finished":
+            $parse->get_tpl('../templates/ticket-info/ticket-info-finished.tpl');
+            break;
+        case "closed":
+            $parse->get_tpl('../templates/ticket-info/ticket-info-closed.tpl');
+            break;
+    };
 
     // } else {
     //     $parse->get_tpl('header-client.tpl');
     // }
     $parse->set_tpl('{ID}', $ticket_info['ticket_id']);
     $parse->set_tpl('{STATE}', getNamedValue('db.ticket_state')[$ticket_info['state']]);
-    $parse->set_tpl('{MASTER_ID_IN}', $master["lastname"] . ' ' . $master["name"] . ' ' . $master["middlename"]);
+    if ($ticket_info['master_id'] != "") {
+        $master = getMasterName($ticket_info['master_id']);
+        $parse->set_tpl('{MASTER_ID_IN}', $master["lastname"] . ' ' . $master["name"] . ' ' . $master["middlename"]);
+    } else {
+        $parse->set_tpl('{MASTER_ID_IN}', "Неизвестный");
+
+    }
 
     $parse->set_tpl('{OWNER}', $ticket_info['owner']);
     $parse->set_tpl('{DATE}', $ticket_info['ticket_date']);
@@ -53,7 +58,7 @@ function showTicketInfo($ticket_info)
 
     $parse->set_tpl('{COURIER}', $ticket_info['handout_owner']);
     $parse->set_tpl('{COURIER_PHONE}', $ticket_info['handout_owner_phone']);
-    if($ticket_info['handout_department_id']!=""){
+    if ($ticket_info['handout_department_id'] != "") {
         $parse->set_tpl('{COURIER_DEPT}', getNamedValue('db.department')[$ticket_info['handout_department_id']]);
     }
     $parse->tpl_parse();

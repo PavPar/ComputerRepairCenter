@@ -30,7 +30,7 @@
                 <button type="submit" name="user-add" class="btn btn_type-card-info" value='USER_ADD'
                     formaction="user-add.php">Добавить</button>
                 <button type="submit" name="user-delete" class="btn btn_type-card-close" value='USER_DELETE'
-                    formaction="value-add.php">Удалить</button>
+                    formaction="user-del.php">Удалить</button>
             </div>
             <div class="card card_level-admin" method="POST">
                 <h2 class="card__title">Департамент</h2>

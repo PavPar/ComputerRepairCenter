@@ -5,7 +5,7 @@ $password = "vertrigo";
 $conn = new mysqli($servername, $username, $password);
 $tickets_table = "db.ticket";
 session_start();
-
+ini_set("session.cache_limiter", "must-revalidate");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -367,7 +367,7 @@ function getListElements($table_name)
             $res = "";
             while ($row = $result->fetch_assoc()) {
                 $row = array_values($row);
-                $res = $res. '<option value="' . $row[0] . '">' . $row[1] . '</option>';
+                $res = $res . '<option value="' . $row[0] . '">' . $row[1] . '</option>';
             }
             return $res;
         }
@@ -384,7 +384,7 @@ function getTableElements($table_name)
     require_once 'template.php';
     $parse = new parse_class;
     $sql = 'SELECT * FROM ' . $table_name;
-    
+
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows > 0) {
@@ -417,18 +417,20 @@ function CheckQuerry($result, $sql)
 }
 
 //Получить всю информацию о пользователе
-function adminGetAllUserInfo($user_id)
+function adminGetAllUserInfo()
 {
     global $conn;
-    $sql = 'SELECT * FROM db.master';
+    $sql = 'SELECT * FROM db.master WHERE role_id!=0';
     $result = $conn->query($sql);
     if ($result) {
+        $res = array();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $row = array_values($row);
-                echo '<option value="' . $row[0] . '">' . $row[1] . '</option>';
+                // $row = array_values($row);
+                array_push($res, $row);
             }
         }
+        return $res;
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
         return false;
@@ -443,10 +445,45 @@ function adminAddUser($user_login, $user_password, $user_firstname, $user_lastna
     CheckQuerry($result, $sql);
 }
 //Удалить пользователя
-function adminRemoveUser($user_id)
+function adminDelUser($user_id)
 {
     global $conn;
-    // $sql = 'INSERT INTO db.master VALUES (master_id,role_id,"' . $user_login . '","' . $user_password . '","' . $user_firstname . '","' . $user_lastname . '","' . $user_middlename . '")';
+    echo $user_id;
+    poolAllTickets($user_id);
+    $sql = 'DELETE FROM db.master WHERE master_id = '.$user_id;
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+}
+
+//Переместить все тикеты в pool (при удалении);
+function poolAllTickets($user_id)
+{
+    $res = getAllMasterTickets($user_id);
+    foreach ($res as &$id) {
+        changeState("pool", $id[0]);
+        removeWorkerFromTicket($id[0]);
+    }
+}
+
+function getAllMasterTickets($user_id)
+{
+    global $conn;
+    $sql = "SELECT ticket_id FROM db.ticket_history WHERE worker_id=" . $user_id;
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+    $res = array();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $row = array_values($row);
+            array_push($res, $row);
+        }
+    }
+    return $res;
+}
+
+function removeWorkerFromTicket($ticket_id){
+    global $conn;
+    $sql = "UPDATE db.ticket_history SET worker_id=null WHERE ticket_id=" . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
 }
@@ -475,15 +512,56 @@ function valueGetPK($tableName)
 function addValue($value, $table)
 {
     global $conn;
-    $sql = "INSERT INTO " . valueGetTable($table) . ' VALUES (NULL,"'.$value.'")';
+    $sql = "INSERT INTO " . valueGetTable($table) . ' VALUES (NULL,"' . $value . '")';
     $result = $conn->query($sql);
-    CheckQuerry($result,$sql);
+    CheckQuerry($result, $sql);
 }
 
 function deleteValue($value, $table)
 {
     global $conn;
-    $sql = "DELETE FROM " . valueGetTable($table)." WHERE ".valueGetPK($table)." = ".$value;
+    $sql = "DELETE FROM " . valueGetTable($table) . " WHERE " . valueGetPK($table) . " = " . $value;
     $result = $conn->query($sql);
-    CheckQuerry($result,$sql);
+    CheckQuerry($result, $sql);
+}
+
+// function createHeader()
+// {
+//     require_once 'template.php';
+//     $parse = new parse_class;
+//     if (userCheck()) {
+//         if (checkPrivalge()) {
+//             $parse->get_tpl('index__header-admin.tpl');
+//             $parse->set_tpl('{LOGIN}', getUserData()['login']);
+//         } else {
+//             $parse->get_tpl('index__header-master.tpl');
+//             $parse->set_tpl('{LOGIN}', getUserData()['login']);
+//         }
+
+//     } else {
+//         echo "Auth error!";
+//         return;
+//     }
+//     $parse->tpl_parse();
+//     echo $parse->template;
+// }
+
+function getUserRowsDel()
+{
+    require_once 'template.php';
+    $parse = new parse_class;
+    $rows = adminGetAllUserInfo();
+    $result = "";
+    foreach ($rows as &$row) {
+        $parse->get_tpl('../templates/table/table__user-row-del.tpl');
+        $parse->set_tpl('{USER_ID}', $row['master_id']);
+        $parse->set_tpl('{USER_LASTNAME}', $row['lastname']);
+        $parse->set_tpl('{USER_NAME}', $row['name']);
+        $parse->set_tpl('{USER_MIDDLENAME}', $row['middleName']);
+        $parse->set_tpl('{USER_LOGIN}', $row['login']);
+        $parse->set_tpl('{USER_PASSWORD}', $row['password']);
+        $parse->tpl_parse();
+        $result = $result . $parse->template;
+    }
+    return $result;
 }
