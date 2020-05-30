@@ -11,7 +11,7 @@ function showTicketInfo($ticket_info)
     $parse = new parse_class;
 
     // if (userCheck()) {
-    switch (getNamedValue('db.ticket_state')[$ticket_info['state']]) {
+    switch (getNamedValue('ticket_state')[$ticket_info['state']]) {
         case "pool":
             $parse->get_tpl('../templates/ticket-info/ticket-info-pool.tpl');
             break;
@@ -30,7 +30,7 @@ function showTicketInfo($ticket_info)
     //     $parse->get_tpl('header-client.tpl');
     // }
     $parse->set_tpl('{ID}', $ticket_info['ticket_id']);
-    $parse->set_tpl('{STATE}', getNamedValue('db.ticket_state')[$ticket_info['state']]);
+    $parse->set_tpl('{STATE}', getNamedValue('ticket_state')[$ticket_info['state']]);
     if ($ticket_info['master_id'] != "") {
         $master = getMasterName($ticket_info['master_id']);
         $parse->set_tpl('{MASTER_ID_IN}', $master["lastname"] . ' ' . $master["name"] . ' ' . $master["middlename"]);
@@ -41,10 +41,10 @@ function showTicketInfo($ticket_info)
     $parse->set_tpl('{OWNER}', $ticket_info['owner']);
     $parse->set_tpl('{DATE}', $ticket_info['ticket_date']);
     $parse->set_tpl('{PHONE}', $ticket_info['owner_phone']);
-    $parse->set_tpl('{OWNER_DEPT}', getNamedValue('db.department')[$ticket_info['department_id']]);
+    $parse->set_tpl('{OWNER_DEPT}', getNamedValue('department')[$ticket_info['department_id']]);
 
-    $parse->set_tpl('{TYPE}', getNamedValue('db.ticket_type')[$ticket_info['ticket_type_id']]);
-    $parse->set_tpl('{TECH_TYPE}', getNamedValue('db.tech_type')[$ticket_info['tech_type_id']]);
+    $parse->set_tpl('{TYPE}', getNamedValue('ticket_type')[$ticket_info['ticket_type_id']]);
+    $parse->set_tpl('{TECH_TYPE}', getNamedValue('tech_type')[$ticket_info['tech_type_id']]);
 
     $parse->set_tpl('{COMMENT_IN}', $ticket_info['comment']);
 
@@ -58,7 +58,7 @@ function showTicketInfo($ticket_info)
     $parse->set_tpl('{COURIER}', $ticket_info['handout_owner']);
     $parse->set_tpl('{COURIER_PHONE}', $ticket_info['handout_owner_phone']);
     if ($ticket_info['handout_department_id'] != "") {
-        $parse->set_tpl('{COURIER_DEPT}', getNamedValue('db.department')[$ticket_info['handout_department_id']]);
+        $parse->set_tpl('{COURIER_DEPT}', getNamedValue('department')[$ticket_info['handout_department_id']]);
     }
     $parse->tpl_parse();
     echo $parse->template;
@@ -71,11 +71,11 @@ function showTicketInfo($ticket_info)
     //     <p> Owner :' . $ticket_info['owner'] . '</p>
     //     <p> Owner phone : ' . $ticket_info['owner_phone'] . '</p>
     //     <p> master ID (Тот кто принял):' . $master["lastname"].' '.$master["name"] .' '.$master["middlename"].'</p>
-    //     <p> Тип тикета : ' . getNamedValue('db.ticket_type')[$ticket_info['ticket_type_id']] . '</p>
-    //     <p> Тип техники : ' . getNamedValue('db.tech_type')[$ticket_info['tech_type_id']] . '</p>
-    //     <p> Отдел : ' . getNamedValue('db.department')[$ticket_info['department_id']] . '</p>
+    //     <p> Тип тикета : ' . getNamedValue('ticket_type')[$ticket_info['ticket_type_id']] . '</p>
+    //     <p> Тип техники : ' . getNamedValue('tech_type')[$ticket_info['tech_type_id']] . '</p>
+    //     <p> Отдел : ' . getNamedValue('department')[$ticket_info['department_id']] . '</p>
     //     <p> Комментарий : ' . $ticket_info['comment'] . '</p>
-    //     <p> Состояние тикета :' . getNamedValue('db.ticket_state')[$ticket_info['state']] . '</p>
+    //     <p> Состояние тикета :' . getNamedValue('ticket_state')[$ticket_info['state']] . '</p>
     //     <p> Кто забрал : ' . $ticket_info['handout_owner'] . '</p>
     //     <p> Номер того кто забрал : ' . $ticket_info['handout_owner_phone'] . '</p>
     //     <p> Отдел того кто забрал : ' . $ticket_info['handout_department_id'] . '</p>
@@ -88,7 +88,7 @@ function showTicketInfo($ticket_info)
     //     <p> Ticket ID: ' . $ticket_info['ticket_id'] . '</p>
     //     <p> Ticket Date: ' . $ticket_info['ticket_date'] . '</p>
     //     <p> master ID (Тот кто принял):' . $master["lastname"].' '.$master["name"] .' '.$master["middlename"] . '</p>
-    //     <p> Состояние тикета :' . getNamedValue('db.ticket_state')[$ticket_info['state']] . '</p>
+    //     <p> Состояние тикета :' . getNamedValue('ticket_state')[$ticket_info['state']] . '</p>
     //     ';
     // }
 
