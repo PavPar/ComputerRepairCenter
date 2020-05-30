@@ -502,10 +502,26 @@ function assignWorkerToTicket($ticket_id, $worker_id)
 
 function takeTicketFromPool($ticket_id)
 {
-    changeState(getNamedValue("ticket_state")[restoreTicket($ticket_id)], $ticket_id);
-    assignWorkerToTicket($ticket_id, $_SESSION["user_id"]);
+    if (!checkWorkerID($ticket_id)) {
+        changeState(getNamedValue("ticket_state")[restoreTicket($ticket_id)], $ticket_id);
+        assignWorkerToTicket($ticket_id, $_SESSION["user_id"]);
+    }
 }
-
+//Проверка что есть работник уже назначеный на тикет
+function checkWorkerID($ticket_id)
+{
+    global $conn;
+    $sql = "SELECT worker_id from ticket_history WHERE ticket_id = " . $ticket_id;
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if ($row["worker_id"] != "") {
+            return true;
+        }
+    }
+    return false;
+}
 //Получить состояние тикета
 function getTicketState($ticket_id)
 {
