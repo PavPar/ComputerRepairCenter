@@ -3,7 +3,7 @@ $servername = "localhost";
 $username = "id13213450_barabar";
 $password = "J$5%p3hL[/]t1RNU";
 $database = "id13213450_db";
-$conn = new mysqli($servername, $username, $password,$database);
+$conn = new mysqli($servername, $username, $password, $database);
 $tickets_table = "ticket";
 
 session_start();
@@ -296,7 +296,7 @@ function getPoolCards()
             return json_encode($cards, JSON_HEX_TAG);
         } else {
             $cards = array();
-            return json_encode($cards, JSON_HEX_TAG);;
+            return json_encode($cards, JSON_HEX_TAG);
         }
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
@@ -364,6 +364,7 @@ function getListElements($table_name)
     global $conn;
     $sql = 'SELECT * FROM ' . $table_name;
     $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
     if ($result) {
         if ($result->num_rows > 0) {
             $res = "";
@@ -450,7 +451,6 @@ function adminAddUser($user_login, $user_password, $user_firstname, $user_lastna
 function adminDelUser($user_id)
 {
     global $conn;
-    echo $user_id;
     poolAllTickets($user_id);
     $sql = 'DELETE FROM master WHERE master_id = ' . $user_id;
     $result = $conn->query($sql);

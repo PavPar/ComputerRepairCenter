@@ -11,7 +11,7 @@
 <body class="page">
     <?php createIndexHeader()?>
     <main class="content">
-        <form method="POST" class="acc-info" action="php/ticket-info.php">
+        <form method="POST" class="acc-info" action="PHP/ticket-info.php">
             <input name="ticket-info" type="text" required>
             <button type="submit"> Получить информацию о состоянии тикета</button>
         </form>

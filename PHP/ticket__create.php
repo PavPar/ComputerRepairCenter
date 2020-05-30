@@ -28,7 +28,7 @@
         </nav>
         <form class="ticket" action="ticket__create-data.php" method="POST">
         <select required class="ticket__input" name="ticket_type">
-                <?php echo getListElements("db.ticket_type")?>
+                <?php echo getListElements("ticket_type")?>
             </select>
             <!-- <input type="datetime-local" value=""> -->
             <input required class="ticket__input" name="owner_name" type="text" placeholder="Имя Ответственного">
@@ -36,12 +36,12 @@
             <!-- Департамент -->
 
             <select required class="ticket__input" name="departments">
-                <?php echo getListElements("db.department")?>
+                <?php echo getListElements("department")?>
             </select>
 
             <!-- Вид устройства -->
             <select required class="ticket__input" name="tech_type">
-                <?php echo getListElements("db.tech_type")?>
+                <?php echo getListElements("tech_type")?>
             </select>
             <input class="ticket__input" name="device_name" type="text" placeholder="Имя устройства (Если Есть)">
             <textarea class="ticket__comment" name="comment" type="text" placeholder="Комментарий"></textarea>
