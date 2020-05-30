@@ -1,11 +1,12 @@
 <?php
 $servername = "localhost";
-$username = "root";
-$password = "vertrigo";
-$conn = new mysqli($servername, $username, $password);
-$tickets_table = "db.ticket";
+$username = "id13213450_barabar";
+$password = "J$5%p3hL[/]t1RNU";
+$database = "id13213450_db";
+$conn = new mysqli($servername, $username, $password,$database);
+$tickets_table = "ticket";
+
 session_start();
-ini_set("session.cache_limiter", "must-revalidate");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -50,7 +51,7 @@ function userCheck()
 function getMasterName($id)
 {
     global $conn;
-    $sql = 'SELECT name,lastname,middlename FROM db.master WHERE master_id = ' . $id;
+    $sql = 'SELECT name,lastname,middlename FROM master WHERE master_id = ' . $id;
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows == 1) {
@@ -73,7 +74,7 @@ function getMasterName($id)
 function getUserData()
 {
     global $conn;
-    $sql = 'SELECT role_name,login,name,lastname,middlename FROM db.master a JOIN db.role b ON (a.role_id = b.role_id) WHERE master_id = ' . $_SESSION['user_id'];
+    $sql = 'SELECT role_name,login,name,lastname,middlename FROM master a JOIN role b ON (a.role_id = b.role_id) WHERE master_id = ' . $_SESSION['user_id'];
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows == 1) {
@@ -99,7 +100,7 @@ function getUserData()
 function userValidation($user)
 {
     global $conn;
-    $sql = 'SELECT master_id, login, password FROM db.master WHERE login = "' . $user['name'] . '"' . ' AND password = "' . $user['password'] . '"';
+    $sql = 'SELECT master_id, login, password FROM master WHERE login = "' . $user['name'] . '"' . ' AND password = "' . $user['password'] . '"';
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows == 1) {
@@ -121,7 +122,7 @@ function checkPrivalge()
 {
     global $conn;
     if (array_key_exists('user_id', $_SESSION)) {
-        $sql = 'SELECT role_id FROM db.master WHERE master_id = ' . $_SESSION['user_id'] . '';
+        $sql = 'SELECT role_id FROM master WHERE master_id = ' . $_SESSION['user_id'] . '';
         $result = $conn->query($sql);
         if ($result) {
             $data = $result->fetch_assoc();
@@ -151,9 +152,9 @@ function saveTicketData($owner_name, $owner_phone, $ticket_type, $device_name, $
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
     if ($self) {
-        $sql = "INSERT INTO db.ticket_history (ticket_id,state,worker_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["in process"] . "," . $_SESSION["user_id"] . ')';
+        $sql = "INSERT INTO ticket_history (ticket_id,state,worker_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["in process"] . "," . $_SESSION["user_id"] . ')';
     } else {
-        $sql = "INSERT INTO db.ticket_history (ticket_id,state,worker_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["pool"] . "," . 'null)';
+        $sql = "INSERT INTO ticket_history (ticket_id,state,worker_id) VALUES (" . mysqli_insert_id($conn) . "," . $states["pool"] . "," . 'null)';
     }
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
@@ -163,7 +164,7 @@ function saveTicketData($owner_name, $owner_phone, $ticket_type, $device_name, $
 function getTicketStates()
 {
     global $conn;
-    $sql = 'SELECT * FROM db.ticket_state';
+    $sql = 'SELECT * FROM ticket_state';
     $result = $conn->query($sql);
 
     $states = array();
@@ -184,7 +185,7 @@ function getTicketStates()
 function getTicketInfo($ticket_id)
 {
     global $conn;
-    $sql = 'SELECT * FROM (db.ticket a join db.ticket_history b on (a.ticket_id = b.ticket_id)) WHERE a.ticket_id = ' . $ticket_id;
+    $sql = 'SELECT * FROM (ticket a join ticket_history b on (a.ticket_id = b.ticket_id)) WHERE a.ticket_id = ' . $ticket_id;
     $result = $conn->query($sql);
 
     $info = array();
@@ -209,10 +210,10 @@ function getTicketInfo($ticket_id)
 function changeState($statename, $ticket_id)
 {
     global $conn;
-    $states = getNamedValue('db.ticket_state');
+    $states = getNamedValue('ticket_state');
     $res = array_search($statename, $states);
     if ($res) {
-        $sql = 'UPDATE db.ticket_history SET state=' . $res . ' WHERE ticket_id = ' . $ticket_id;
+        $sql = 'UPDATE ticket_history SET state=' . $res . ' WHERE ticket_id = ' . $ticket_id;
         $result = $conn->query($sql);
         CheckQuerry($result, $sql);
     } else {
@@ -224,7 +225,7 @@ function changeState($statename, $ticket_id)
 function finishTicket($ticket_id, $handout_comment)
 {
     global $conn;
-    $sql = 'UPDATE db.ticket_history
+    $sql = 'UPDATE ticket_history
     SET
     final_comment ="' . $handout_comment . '."
     WHERE ticket_id = ' . $ticket_id;
@@ -237,7 +238,7 @@ function finishTicket($ticket_id, $handout_comment)
 function closeTicket($ticket_id, $handout_owner, $handout_owner_phone, $handout_department)
 {
     global $conn;
-    $sql = 'UPDATE db.ticket_history
+    $sql = 'UPDATE ticket_history
     SET
     handout_date = SYSDATE(),
     handout_owner = "' . $handout_owner . '",
@@ -277,7 +278,7 @@ function getPoolCards()
     global $conn;
     global $tickets_table;
     userAuthCheck();
-    $sql = 'SELECT ticket_id,ticket_date,department_id,owner,state FROM db.ticket a JOiN db.ticket_history USING(Ticket_id) WHERE state = ' . array_search('pool', getNamedValue('db.ticket_state')) . '';
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner,state FROM ticket a JOiN ticket_history USING(Ticket_id) WHERE state = ' . array_search('pool', getNamedValue('ticket_state')) . '';
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows > 0) {
@@ -286,9 +287,9 @@ function getPoolCards()
                 $card = array(
                     "id" => $row["ticket_id"],
                     "date" => $row["ticket_date"],
-                    "department" => getNamedValue('db.department')[$row["department_id"]],
+                    "department" => getNamedValue('department')[$row["department_id"]],
                     "owner" => $row["owner"],
-                    "state" => getNamedValue('db.ticket_state')[$row["state"]],
+                    "state" => getNamedValue('ticket_state')[$row["state"]],
                 );
                 array_push($cards, $card);
             }
@@ -308,7 +309,7 @@ function getSpecificCards()
     global $conn;
     global $tickets_table;
     userAuthCheck();
-    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE worker_id = ' . $_SESSION['user_id'];
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner FROM ticket a JOiN ticket_history b USING(Ticket_id) WHERE worker_id = ' . $_SESSION['user_id'];
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows > 0) {
@@ -331,7 +332,7 @@ function getCardsArray()
     global $conn;
     global $tickets_table;
     userAuthCheck();
-    $sql = 'SELECT ticket_id,ticket_date,department_id,owner,state FROM db.ticket a JOiN db.ticket_history b USING(Ticket_id) WHERE worker_id = ' . $_SESSION['user_id'];
+    $sql = 'SELECT ticket_id,ticket_date,department_id,owner,state FROM ticket a JOiN ticket_history b USING(Ticket_id) WHERE worker_id = ' . $_SESSION['user_id'];
     $result = $conn->query($sql);
     if ($result) {
         $cards = array();
@@ -340,9 +341,9 @@ function getCardsArray()
                 $card = array(
                     "id" => $row["ticket_id"],
                     "date" => $row["ticket_date"],
-                    "department" => getNamedValue('db.department')[$row["department_id"]],
+                    "department" => getNamedValue('department')[$row["department_id"]],
                     "owner" => $row["owner"],
-                    "state" => getNamedValue('db.ticket_state')[$row["state"]],
+                    "state" => getNamedValue('ticket_state')[$row["state"]],
                 );
                 array_push($cards, $card);
             }
@@ -421,7 +422,7 @@ function CheckQuerry($result, $sql)
 function adminGetAllUserInfo()
 {
     global $conn;
-    $sql = 'SELECT * FROM db.master WHERE role_id!=0';
+    $sql = 'SELECT * FROM master WHERE role_id!=0';
     $result = $conn->query($sql);
     if ($result) {
         $res = array();
@@ -441,7 +442,7 @@ function adminGetAllUserInfo()
 function adminAddUser($user_login, $user_password, $user_firstname, $user_lastname, $user_middlename)
 {
     global $conn;
-    $sql = 'INSERT INTO db.master VALUES (master_id,role_id,"' . $user_login . '","' . $user_password . '","' . $user_firstname . '","' . $user_lastname . '","' . $user_middlename . '")';
+    $sql = 'INSERT INTO master VALUES (master_id,role_id,"' . $user_login . '","' . $user_password . '","' . $user_firstname . '","' . $user_lastname . '","' . $user_middlename . '")';
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
 }
@@ -451,7 +452,7 @@ function adminDelUser($user_id)
     global $conn;
     echo $user_id;
     poolAllTickets($user_id);
-    $sql = 'DELETE FROM db.master WHERE master_id = ' . $user_id;
+    $sql = 'DELETE FROM master WHERE master_id = ' . $user_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
 }
@@ -470,7 +471,7 @@ function poolAllTickets($user_id)
 function getAllMasterTickets($user_id)
 {
     global $conn;
-    $sql = "SELECT ticket_id FROM db.ticket_history WHERE worker_id=" . $user_id;
+    $sql = "SELECT ticket_id FROM ticket_history WHERE worker_id=" . $user_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
     $res = array();
@@ -486,7 +487,7 @@ function getAllMasterTickets($user_id)
 function removeWorkerFromTicket($ticket_id)
 {
     global $conn;
-    $sql = "UPDATE db.ticket_history SET worker_id=null WHERE ticket_id=" . $ticket_id;
+    $sql = "UPDATE ticket_history SET worker_id=null WHERE ticket_id=" . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
 }
@@ -494,14 +495,14 @@ function removeWorkerFromTicket($ticket_id)
 function assignWorkerToTicket($ticket_id, $worker_id)
 {
     global $conn;
-    $sql = "UPDATE db.ticket_history SET worker_id =" . $worker_id . " WHERE ticket_id = " . $ticket_id;
+    $sql = "UPDATE ticket_history SET worker_id =" . $worker_id . " WHERE ticket_id = " . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
 }
 
 function takeTicketFromPool($ticket_id)
 {
-    changeState(getNamedValue("db.ticket_state")[restoreTicket($ticket_id)], $ticket_id);
+    changeState(getNamedValue("ticket_state")[restoreTicket($ticket_id)], $ticket_id);
     assignWorkerToTicket($ticket_id, $_SESSION["user_id"]);
 }
 
@@ -509,7 +510,7 @@ function takeTicketFromPool($ticket_id)
 function getTicketState($ticket_id)
 {
     global $conn;
-    $sql = "SELECT state from db.ticket_history WHERE ticket_id = " . $ticket_id;
+    $sql = "SELECT state from ticket_history WHERE ticket_id = " . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
     if ($result->num_rows > 0) {
@@ -526,9 +527,9 @@ function saveTicketState($ticket_id)
 {
     global $conn;
     if (!checkTicketPoolState($ticket_id)) {
-        $sql = "INSERT INTO db.ticket_pool_states VALUES(" . $ticket_id . "," . getTicketState($ticket_id) . ")";
+        $sql = "INSERT INTO ticket_pool_states VALUES(" . $ticket_id . "," . getTicketState($ticket_id) . ")";
     } else {
-        $sql = "UPDATE db.ticket_pool_states SET prev_state=" . getTicketState($ticket_id) . " WHERE ticket_id = " . $ticket_id;
+        $sql = "UPDATE ticket_pool_states SET prev_state=" . getTicketState($ticket_id) . " WHERE ticket_id = " . $ticket_id;
     }
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
@@ -538,7 +539,7 @@ function saveTicketState($ticket_id)
 function checkTicketPoolState($ticket_id)
 {
     global $conn;
-    $sql = "SELECT ticket_id FROM db.ticket_pool_states WHERE ticket_id = " . $ticket_id;
+    $sql = "SELECT ticket_id FROM ticket_pool_states WHERE ticket_id = " . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
     if ($result->num_rows > 0) {
@@ -549,7 +550,7 @@ function checkTicketPoolState($ticket_id)
 function retrivePoolTicketState($ticket_id)
 {
     global $conn;
-    $sql = "SELECT prev_state FROM db.ticket_pool_states WHERE ticket_id = " . $ticket_id;
+    $sql = "SELECT prev_state FROM ticket_pool_states WHERE ticket_id = " . $ticket_id;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
     if ($result->num_rows > 0) {
@@ -577,9 +578,9 @@ function valueGetTable($tableName)
 {
     switch ($tableName) {
         case "department":
-            return "db.department";
+            return "department";
         case "tech":
-            return "db.tech_type";
+            return "tech_type";
     }
 }
 

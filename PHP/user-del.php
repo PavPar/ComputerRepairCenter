@@ -1,8 +1,9 @@
-<!DOCTYPE html>
-<html lang="ru">
 <?php include "db.php"?>
 <?php userAuthCheck();?>
 <?php checkPrivalge()?>
+<!DOCTYPE html>
+<html lang="ru">
+
 <?php 
 function createHeader()
 {
