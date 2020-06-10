@@ -29,7 +29,7 @@ function createHeader()
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MASTER PAGE</title>
+    <title>Удалить пользователя</title>
     <link href="../pages/ticket__create.css" rel="stylesheet">
 </head>
 
