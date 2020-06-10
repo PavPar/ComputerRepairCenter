@@ -21,13 +21,12 @@
         </div>
     </header>
     <main class="content">
-        <nav class="nav-block">
-            <a href="ticket__create.php" class="btn btn_type-add"></a>
-        </nav>
         <form class="cards" method="POST" action="value-modify.php">
             <div class="card card_level-admin" method="POST">
                 <h2 class="card__title">Пользователь</h2>
-                <button type="submit" name="user-add" class="btn btn_type-card-info" value='USER_ADD'
+                <button type="submit" name="value" class="btn btn_type-card-info" value='tech' formaction="user-view.php"
+                   >Посмотреть</button>
+                <button type="submit" name="user-add" class="btn btn_type-card-add" value='USER_ADD'
                     formaction="user-add.php">Добавить</button>
                 <button type="submit" name="user-delete" class="btn btn_type-card-close" value='USER_DELETE'
                     formaction="user-del.php">Удалить</button>

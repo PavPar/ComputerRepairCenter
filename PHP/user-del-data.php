@@ -4,5 +4,5 @@ $fields = array(
     "del"
 );
 adminDelUser(getData($fields[0],true));
-header("Location: admin.php");
+header("Location: user-del.php");
 ?>

@@ -1,8 +1,14 @@
 <?php
 $servername = "localhost";
-$username = "id13213450_barabar";
-$password = "J$5%p3hL[/]t1RNU";
-$database = "id13213450_db";
+$username = "root";
+$password = "vertrigo";
+$database = "db";
+
+// $servername = "localhost";
+// $username = "id13213450_barabar";
+// $password = "J$5%p3hL[/]t1RNU";
+// $database = "id13213450_db";
+
 $conn = new mysqli($servername, $username, $password, $database);
 $tickets_table = "ticket";
 
@@ -443,18 +449,35 @@ function adminGetAllUserInfo()
 function adminAddUser($user_login, $user_password, $user_firstname, $user_lastname, $user_middlename)
 {
     global $conn;
-    $sql = 'INSERT INTO master VALUES (master_id,role_id,"' . $user_login . '","' . $user_password . '","' . $user_firstname . '","' . $user_lastname . '","' . $user_middlename . '")';
-    $result = $conn->query($sql);
-    CheckQuerry($result, $sql);
+    if (!chackUserLogin($user_login)) {
+        $sql = 'INSERT INTO master VALUES (master_id,role_id,"' . $user_login . '","' . $user_password . '","' . $user_firstname . '","' . $user_lastname . '","' . $user_middlename . '")';
+        $result = $conn->query($sql);
+        CheckQuerry($result, $sql);
+    }
 }
 //Удалить пользователя
 function adminDelUser($user_id)
 {
     global $conn;
     poolAllTickets($user_id);
-    $sql = 'DELETE FROM master WHERE master_id = ' . $user_id;
+    $sql = 'DELETE FROM master WHERE master_id = "' . $user_id . '"';
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
+}
+
+//Возвращает true если логин уже занят
+function chackUserLogin($login)
+{
+    global $conn;
+    $sql = 'SELECT login FROM master WHERE login = "' . $login . '"';
+    $result = $conn->query($sql);
+    CheckQuerry($result, $sql);
+    if ($result) {
+        if ($result->num_rows > 0) {
+            return true;
+        }
+        return false;
+    }
 }
 
 //Переместить все тикеты в pool (при удалении);
@@ -655,6 +678,26 @@ function getUserRowsDel()
     $result = "";
     foreach ($rows as &$row) {
         $parse->get_tpl('../templates/table/table__user-row-del.tpl');
+        $parse->set_tpl('{USER_ID}', $row['master_id']);
+        $parse->set_tpl('{USER_LASTNAME}', $row['lastname']);
+        $parse->set_tpl('{USER_NAME}', $row['name']);
+        $parse->set_tpl('{USER_MIDDLENAME}', $row['middleName']);
+        $parse->set_tpl('{USER_LOGIN}', $row['login']);
+        $parse->set_tpl('{USER_PASSWORD}', $row['password']);
+        $parse->tpl_parse();
+        $result = $result . $parse->template;
+    }
+    return $result;
+}
+
+function getUserRows()
+{
+    require_once 'template.php';
+    $parse = new parse_class;
+    $rows = adminGetAllUserInfo();
+    $result = "";
+    foreach ($rows as &$row) {
+        $parse->get_tpl('../templates/table/table__user-row.tpl');
         $parse->set_tpl('{USER_ID}', $row['master_id']);
         $parse->set_tpl('{USER_LASTNAME}', $row['lastname']);
         $parse->set_tpl('{USER_NAME}', $row['name']);
