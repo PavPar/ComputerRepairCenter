@@ -1,3 +1,7 @@
 .search-bar__input{
-    
+    border: none;
+    border-bottom: 2px black solid;
+    background: none;
+    margin-bottom: 55px;
+    font-size: 25px;
 }

@@ -14,8 +14,8 @@
     <main class="content">
         <form method="POST" class="search-bar" action="PHP/ticket-info.php">
             <h2 class="search-bar__title">Узнать состояние заказа по его номеру</h2>
-            <input name="ticket-info" type="text" required>
-            <button type="submit"> Получить информацию о состоянии тикета</button>
+            <input class="search-bar__input" name="ticket-info" type="text" required placeholder="Номер тикета">
+            <button class="btn btn_type-card-add" type="submit"> Получить информацию о состоянии тикета</button>
         </form>
     </main>
     <footer class="footer"></footer>
