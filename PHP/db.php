@@ -321,9 +321,9 @@ function getPoolCards()
                 $card = array(
                     "id" => $row["ticket_id"],
                     "date" => $row["ticket_date"],
-                    "department" => getNamedValue('department')[$row["department_id"]],
+                    "department" => getNullableValueFromTable('department', $row, "department_id"),
                     "owner" => $row["owner"],
-                    "state" => getNamedValue('ticket_state')[$row["state"]],
+                    "state" => getNullableValueFromTable('ticket_state', $row, "state"),
                 );
                 array_push($cards, $card);
             }
