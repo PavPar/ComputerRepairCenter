@@ -36,6 +36,9 @@ function createHeader()
 <?php createHeader();?>
     <main class="content">
         <?php CreateForm();?>
+        <form method="POST" class="acc-info">
+                <button class="btn btn_type-logout" value="master" formaction="admin.php">Назад</button>
+            </form>
     </main>
     <footer class="footer"></footer>
 </body>

@@ -26,6 +26,9 @@
                         <textarea class="ticket__comment" name="comment" type="text" placeholder="Комментарий"></textarea>
                         <button class="btn btn_type-accept" type="submit" value=<?php echo getData('ticket-close', true); ?> name="btn_close">Закрыть тикет</button>
             </form>
+            <form method="POST" class="acc-info">
+                <button class="btn btn_type-logout" value="master" formaction="master.php">Назад</button>
+            </form>
     </main>
     <footer class="footer"></footer>
 </body>

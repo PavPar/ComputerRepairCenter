@@ -2,6 +2,7 @@
     background-color: red;
     transition: box-shadow ease-out .5s;
     width: 350px;
+    align-self: center;
 }
 
 .btn_type-logout:hover{

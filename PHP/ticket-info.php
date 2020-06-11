@@ -21,7 +21,10 @@
     </header> -->
     <?php createHeader()?>
     <main class="content">
-      <?php showTicketInfo(getTicketInfo(getData('ticket-info', true))); ?>
+      <?php showTicketInfo(getTicketInfo(getData('ticket-info', true)));?>
+      <form method="POST" class="acc-info">
+                <button class="btn btn_type-logout" value="master" formaction="master.php">Назад</button>
+            </form>
     </main>
     <footer class="footer"></footer>
 </body>

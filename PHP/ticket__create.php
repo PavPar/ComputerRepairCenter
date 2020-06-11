@@ -48,6 +48,9 @@
             <input class="btn btn_type-accept" type="submit" value="Принять заявку на себя" name="btn_self">
             <input class="btn btn_type-decline-yellow" type="submit" value="Отправить заявку в pool" name="btn_pool">
         </form>
+        <form method="POST" class="acc-info">
+                <button class="btn btn_type-logout" value="master" formaction="master.php">Назад</button>
+            </form>
     </main>
     <footer class="footer"></footer>
 </body>

@@ -3,7 +3,7 @@
 <?php checkPrivalge()?>
 <!DOCTYPE html>
 <html lang="ru">
-<?php 
+<?php
 function createHeader()
 {
     require_once 'template.php';
@@ -44,6 +44,9 @@ function createHeader()
 
             <input class="btn btn_type-accept" type="submit" value="Создать пользователя" name="btn_self">
         </form>
+        <form method="POST" class="acc-info">
+                <button class="btn btn_type-logout" value="master" formaction="admin.php">Назад</button>
+            </form>
     </main>
     <footer class="footer"></footer>
 </body>
