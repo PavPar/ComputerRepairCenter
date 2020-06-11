@@ -106,13 +106,22 @@ function getUserData()
 function userValidation($user)
 {
     global $conn;
-    $sql = 'SELECT master_id, login, password FROM master WHERE login = "' . $user['name'] . '"' . ' AND password = "' . $user['password'] . '"';
+    $sql = 'SELECT role_id,master_id, login, password FROM master WHERE login = "' . $user['name'] . '"' . ' AND password = "' . $user['password'] . '"';
     $result = $conn->query($sql);
     if ($result) {
         if ($result->num_rows == 1) {
             $data = $result->fetch_assoc();
-            $_SESSION['user_id'] = "" . $data['master_id'];
-            return true;
+            if (empty($_SESSION['user_id'])) {
+                $_SESSION['user_id'] = "" . $data['master_id'];
+                if ($data['role_id'] == 0) {
+                    $log = date('Y-m-d H:i:s') . ' - Произведен вход в управление';
+                    file_put_contents(__DIR__ . '/admin_log.txt', $log . PHP_EOL, FILE_APPEND);
+                }
+                return true;
+            }
+            $log = date('Y-m-d H:i:s') . ' - Ошибка входа пользователя функция  userValidation : ' . $user;
+            file_put_contents(__DIR__ . '/erors_log.txt', $log . PHP_EOL, FILE_APPEND);
+            return false;
         } else {
             return false;
         }
@@ -453,6 +462,10 @@ function adminAddUser($user_login, $user_password, $user_firstname, $user_lastna
         $sql = 'INSERT INTO master VALUES (master_id,role_id,"' . $user_login . '","' . $user_password . '","' . $user_firstname . '","' . $user_lastname . '","' . $user_middlename . '")';
         $result = $conn->query($sql);
         CheckQuerry($result, $sql);
+        if ($result) {
+            $log = date('Y-m-d H:i:s') . ' -- Произведено добавление пользователя ' . $user_id . '-' . $user_login;
+            file_put_contents(__DIR__ . '/admin_log.txt', $log . PHP_EOL, FILE_APPEND);
+        }
     }
 }
 //Удалить пользователя
@@ -463,6 +476,10 @@ function adminDelUser($user_id)
     $sql = 'DELETE FROM master WHERE master_id = "' . $user_id . '"';
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
+    if ($result) {
+        $log = date('Y-m-d H:i:s') . ' -- Произведено удаление пользователя значения:' . $user_id;
+        file_put_contents(__DIR__ . '/admin_log.txt', $log . PHP_EOL, FILE_APPEND);
+    }
 }
 
 //Возвращает true если логин уже занят
@@ -639,6 +656,10 @@ function addValue($value, $table)
     $sql = "INSERT INTO " . valueGetTable($table) . ' VALUES (NULL,"' . $value . '")';
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
+    if ($result) {
+        $log = date('Y-m-d H:i:s') . ' -- Произведено добавление значения:' . $value . ' в таблицу ' . $table;
+        file_put_contents(__DIR__ . '/admin_log.txt', $log . PHP_EOL, FILE_APPEND);
+    }
 }
 
 function deleteValue($value, $table)
@@ -647,6 +668,10 @@ function deleteValue($value, $table)
     $sql = "DELETE FROM " . valueGetTable($table) . " WHERE " . valueGetPK($table) . " = " . $value;
     $result = $conn->query($sql);
     CheckQuerry($result, $sql);
+    if ($result) {
+        $log = date('Y-m-d H:i:s') . ' -- Произведено удаление значения:' . $value . ' из таблицы ' . $table;
+        file_put_contents(__DIR__ . '/admin_log.txt', $log . PHP_EOL, FILE_APPEND);
+    }
 }
 
 // function createHeader()

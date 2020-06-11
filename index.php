@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MASTER PAGE</title>
+    <title>Отдел по ремонту ПК и прочих устройств</title>
     <link href="../pages/master.css" rel="stylesheet">
 </head>
 
