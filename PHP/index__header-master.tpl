@@ -1,6 +1,5 @@
  <header class="header">
         <div class="acc-info">
-            <h1>Отедел по ремонту ПК</h1>
             <img class="acc-info__logo" src="../images/inqusition-01.svg">
             <h2 class="acc-info__name">{LOGIN}</h2>
             <form method="POST">

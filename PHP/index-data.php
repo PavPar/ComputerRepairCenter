@@ -6,8 +6,13 @@ function createIndexHeader()
     require getcwd() . '/PHP/template.php';
     $parse = new parse_class;
     if (userCheck()) {
-        $parse->get_tpl(getcwd() . '/PHP/index__header-master.tpl');
-        $parse->set_tpl('{LOGIN}', getUserData()['login']);
+        if(isAdmin()){
+            $parse->get_tpl(getcwd() . '/PHP/index__header-admin.tpl');
+            $parse->set_tpl('{LOGIN}', getUserData()['login']);
+        }else{
+            $parse->get_tpl(getcwd() . '/PHP/index__header-master.tpl');
+            $parse->set_tpl('{LOGIN}', getUserData()['login']);
+        }   
     } else {
         $parse->get_tpl(getcwd() . '/PHP/index__header-client.tpl');
     }

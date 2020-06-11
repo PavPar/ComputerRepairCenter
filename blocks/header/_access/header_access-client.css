@@ -1,0 +1,7 @@
+.header_access-client{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 15px;
+    box-sizing: content-box;
+}

@@ -1,6 +1,7 @@
 @import url(../vendor/normalize.css);
 @import url(../blocks/page/page.css);
 @import url(../blocks/header/header.css);
+@import url(../blocks/header/_access/header_access-client.css);
 @import url(../blocks/content/content.css);
 @import url(../blocks/footer/footer.css);
 /* --- */
@@ -20,6 +21,10 @@
 @import url(../blocks/btn/_type/btn_type-finished.css);
 @import url(../blocks/btn/_type/btn_type-closed.css);
 @import url(../blocks/btn/_type/btn_type-all.css);
-
+@import url(../blocks/btn/_type/btn_type-login.css);
 
 @import url(../fonts/Inter/inter.css);
+@import url(../blocks/form-login/form-login.css);
+
+/*  */
+@import url(../blocks/search-bar/search-bar.css);

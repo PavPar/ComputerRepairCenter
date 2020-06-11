@@ -1,0 +1,9 @@
+@import url(./__input/search-bar__input.css);
+@import url(./__title/search-bar__title.css);
+
+.search-bar{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    margin: 250px auto;
+}
