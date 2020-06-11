@@ -1,13 +1,13 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "vertrigo";
-$database = "db";
-
 // $servername = "localhost";
-// $username = "id13213450_barabar";
-// $password = "J$5%p3hL[/]t1RNU";
-// $database = "id13213450_db";
+// $username = "root";
+// $password = "vertrigo";
+// $database = "db";
+
+$servername = "localhost";
+$username = "id13213450_barabar";
+$password = "J$5%p3hL[/]t1RNU";
+$database = "id13213450_db";
 
 $conn = new mysqli($servername, $username, $password, $database);
 $tickets_table = "ticket";
@@ -154,7 +154,8 @@ function checkPrivalge()
     die('Session is empty!');
 }
 
-function isAdmin(){
+function isAdmin()
+{
     global $conn;
     if (array_key_exists('user_id', $_SESSION)) {
         $sql = 'SELECT role_id FROM master WHERE master_id = ' . $_SESSION['user_id'] . '';
@@ -173,6 +174,7 @@ function isAdmin(){
     }
     die('Session is empty!');
 }
+
 //Сохранение данных тикета
 function saveTicketData($owner_name, $owner_phone, $ticket_type, $device_name, $tech_type, $department, $comment, $self)
 {
@@ -492,7 +494,7 @@ function adminAddUser($user_login, $user_password, $user_firstname, $user_lastna
         $result = $conn->query($sql);
         CheckQuerry($result, $sql);
         if ($result) {
-            $log = date('Y-m-d H:i:s') . ' -- Произведено добавление пользователя ' . $user_id . '-' . $user_login;
+            $log = date('Y-m-d H:i:s') . ' -- Произведено добавление пользователя - '. $user_login;
             file_put_contents(__DIR__ . '/admin_log.txt', $log . PHP_EOL, FILE_APPEND);
         }
     }
