@@ -154,6 +154,25 @@ function checkPrivalge()
     die('Session is empty!');
 }
 
+function isAdmin(){
+    global $conn;
+    if (array_key_exists('user_id', $_SESSION)) {
+        $sql = 'SELECT role_id FROM master WHERE master_id = ' . $_SESSION['user_id'] . '';
+        $result = $conn->query($sql);
+        if ($result) {
+            $data = $result->fetch_assoc();
+            if ($data['role_id'] == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+            return false;
+        }
+    }
+    die('Session is empty!');
+}
 //Сохранение данных тикета
 function saveTicketData($owner_name, $owner_phone, $ticket_type, $device_name, $tech_type, $department, $comment, $self)
 {
@@ -356,9 +375,9 @@ function getCardsArray()
                 $card = array(
                     "id" => $row["ticket_id"],
                     "date" => $row["ticket_date"],
-                    "department" => getNamedValue('department')[$row["department_id"]],
+                    "department" => getNullableValueFromTable('department', $row, "department_id"),
                     "owner" => $row["owner"],
-                    "state" => getNamedValue('ticket_state')[$row["state"]],
+                    "state" => getNullableValueFromTable('ticket_state', $row, "state"),
                 );
                 array_push($cards, $card);
             }
@@ -373,6 +392,16 @@ function getCardsArray()
     }
 }
 
+//Получить данные из таблицы и в случае их отсуствия вертнуть "" aka null
+function getNullableValueFromTable($table, $arr, $key)
+{
+    if (array_key_exists($key, $arr)) {
+        if (!is_null($arr[$key])) {
+            return getNamedValue($table)[$arr[$key]];
+        }
+    }
+    return "=УДАЛЕН=";
+}
 //Получить данные из таблиц в которых два столбца (Id,имя опции) для помещения вариантов в список выбора
 function getListElements($table_name)
 {

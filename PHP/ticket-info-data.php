@@ -30,7 +30,7 @@ function showTicketInfo($ticket_info)
     //     $parse->get_tpl('header-client.tpl');
     // }
     $parse->set_tpl('{ID}', $ticket_info['ticket_id']);
-    $parse->set_tpl('{STATE}', getNamedValue('ticket_state')[$ticket_info['state']]);
+    $parse->set_tpl('{STATE}', getNullableValueFromTable('ticket_state', $ticket_info, 'state'));
     if ($ticket_info['master_id'] != "") {
         $master = getMasterName($ticket_info['master_id']);
         $parse->set_tpl('{MASTER_ID_IN}', $master["lastname"] . ' ' . $master["name"] . ' ' . $master["middlename"]);
@@ -41,10 +41,10 @@ function showTicketInfo($ticket_info)
     $parse->set_tpl('{OWNER}', $ticket_info['owner']);
     $parse->set_tpl('{DATE}', $ticket_info['ticket_date']);
     $parse->set_tpl('{PHONE}', $ticket_info['owner_phone']);
-    $parse->set_tpl('{OWNER_DEPT}', getNamedValue('department')[$ticket_info['department_id']]);
+    $parse->set_tpl('{OWNER_DEPT}', getNullableValueFromTable('department', $ticket_info, 'department_id'));
 
-    $parse->set_tpl('{TYPE}', getNamedValue('ticket_type')[$ticket_info['ticket_type_id']]);
-    $parse->set_tpl('{TECH_TYPE}', getNamedValue('tech_type')[$ticket_info['tech_type_id']]);
+    $parse->set_tpl('{TYPE}', getNullableValueFromTable('ticket_type', $ticket_info, 'ticket_type_id'));
+    $parse->set_tpl('{TECH_TYPE}', getNullableValueFromTable('tech_type', $ticket_info, 'tech_type_id'));
 
     $parse->set_tpl('{COMMENT_IN}', $ticket_info['comment']);
 
@@ -58,10 +58,11 @@ function showTicketInfo($ticket_info)
     $parse->set_tpl('{COURIER}', $ticket_info['handout_owner']);
     $parse->set_tpl('{COURIER_PHONE}', $ticket_info['handout_owner_phone']);
     if ($ticket_info['handout_department_id'] != "") {
-        $parse->set_tpl('{COURIER_DEPT}', getNamedValue('department')[$ticket_info['handout_department_id']]);
+        $parse->set_tpl('{COURIER_DEPT}', getNullableValueFromTable('department', $ticket_info, 'handout_department_id'));
     }
     $parse->tpl_parse();
     echo $parse->template;
+    //getNullableValueFromTable($table, $key, $arr)
     // $master = getMasterName($ticket_info['master_id']);
     // if (userCheck()) {
     //     echo '
